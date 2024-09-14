@@ -1,0 +1,142 @@
+#header{
+    background-color: #262D34;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 1rem 1rem;
+}
+#left-section{
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-evenly;
+    width: 15%;
+}
+#right-section{
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-evenly;
+    width: 15%;
+}
+a{
+    color: white;
+    text-decoration: none;
+}
+#logo{
+    color: #FF571A;
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding-top: .5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    width: 11%;
+    display: flex;
+}
+.icon{
+    color: white;
+    background-color: #2C353D;
+    padding: .3rem .5rem;
+    border-radius: 5px;
+    font-size: 30px;
+    margin: 1 1rem;
+    cursor: pointer;
+    transform: .3s;
+}
+.icon:hover{
+    background-color: #FF571A;
+}
+#search-bar{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #2C353D;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    width: 50%;
+}
+
+#search-bar input{
+    background-color: #2C353D;
+    border: none;
+    color: #858EAD;
+    width: 70%;
+    padding: 0.5rem;
+}
+#search-bar input:hover{
+    background-color: #262D34;
+}
+#search-bar select{
+    background-color: #2C353D;
+    border: none;
+    color: #858EAD;
+    padding: 0.5rem;
+}
+#search-bar select:hover{
+    background-color: #262D34;
+}
+
+#search-bar button{
+    background-color: #2C353D;
+    border: none;
+    color: #858EAD;
+    font-size: 1.5rem;
+    padding: 0.5rem .5rem;
+    border-radius: 5px;
+}
+#search-bar button:hover{
+    background-color: #FF571A;
+}
+#mobile{
+    display: none;
+}
+@media screen and (max-width: 768px){
+    #header {
+        padding: 1rem 0 1rem 0;
+    }
+    #logo {
+        font-size: 1.3rem;
+        padding-top: .5rem;
+        padding-right: 1rem;
+        width: 11%;
+        display: flex;
+    }
+    #left-section{
+        display: none;
+    }
+    #right-section{
+        display: none;
+    }
+    #mobile{
+        display: flex;
+    }
+    #mobile-navbar {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        position: fixed;
+        top: 0;
+        right: -300px;
+        height: 100vh;
+        width: 30%;
+        background-color: #262D34;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        transition: 0.3s;
+        padding: 70px 0 0 10px;
+        margin-top: 0px;
+    }
+    #mobile-navbar.active{
+        right: 0;
+    }
+    #mobile li{
+        list-style: none;
+        margin-bottom: 25px;
+    }
+    #close{
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        color: white;
+        font-size: 2rem;
+        cursor: pointer;
+    }
+}

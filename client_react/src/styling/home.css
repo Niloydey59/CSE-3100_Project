@@ -1,0 +1,12 @@
+/* src/styling/home.css */
+.home-page {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  
+  .main-content {
+    display: flex;
+    background-color: #1E252B;
+  }
+  

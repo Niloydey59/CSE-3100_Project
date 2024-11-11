@@ -1,0 +1,20 @@
+/* src/styling/postItem.css */
+.post-item {
+    background-color: #262D34;
+    margin-bottom: 10px;
+    padding: 15px;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+  }
+  
+  .post-item:hover {
+    background-color: #3b444e;
+  }
+  
+  .post-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    color: #999;
+  }
+  

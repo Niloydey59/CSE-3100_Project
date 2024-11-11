@@ -8,30 +8,34 @@ const { findWithId } = require("../services/finditem");
 const { createJSONWebToken } = require("../helper/jsonwebtoken");
 const { jwtActivationKey, clientURL } = require("../secret");
 const { sendEmailWithNodeMailer } = require("../helper/email");
+const { runValidation } = require("../validators/validation");
 
 const getUsers = async (req, res, next) => {
   try {
+    //pagination and search query params
     const search = req.query.search || "";
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 5;
 
+    //search filter and options for query
     const searchRegExp = new RegExp(".*" + search + ".*", "i");
     const filter = {
-      isAdmin: { $ne: true },
       $or: [
-        { name: { $regex: searchRegExp } },
+        { username: { $regex: searchRegExp } },
         { email: { $regex: searchRegExp } },
-        { phone: { $regex: searchRegExp } },
       ],
     };
     const options = { password: 0 };
 
+    //find users with filter and options
     const users = await User.find(filter, options)
       .limit(limit)
       .skip(limit * (page - 1)); // pagination;
 
+    //count total users
     const count = await User.find(filter).countDocuments();
 
+    //return error if no users found
     if (!users || users.length === 0)
       throw next(createError(404, "No Users found!"));
 
@@ -71,17 +75,18 @@ const getUserById = async (req, res, next) => {
 
 const deleteUserById = async (req, res, next) => {
   try {
+    //get user id from request params
     const id = req.params.id;
     const options = { password: 0 };
+
+    //find user with id and exclude password field(options object)
     const user = await findWithId(User, id, options);
 
-    const userImagePath = user.image;
+    console.log("User: ", user);
 
-    deleteImage(userImagePath);
-
+    // find user and delete
     await User.findByIdAndDelete({
       _id: id,
-      isAdmin: false,
     });
 
     return successResponse(res, {
@@ -95,19 +100,21 @@ const deleteUserById = async (req, res, next) => {
 
 const processRegister = async (req, res, next) => {
   try {
-    const { name, email, password, phone, address } = req.body;
+    //get user data from request body
+    const { username, email, password } = req.body;
 
+    //check if user already exists
     const userExist = await User.exists({ email: email });
     if (userExist) {
       throw createError(409, "User already exists!Please login.");
     }
 
     //print user data
-    console.log("User Data: ", { name, email, password, phone, address });
+    console.log("User Data: ", { username, email, password });
 
     //create jwt
     const token = createJSONWebToken(
-      { name, email, password, phone, address },
+      { username, email, password },
       jwtActivationKey,
       "10m"
     );
@@ -117,9 +124,9 @@ const processRegister = async (req, res, next) => {
       email,
       subject: "Account Activation Link",
       html: `
-        <h2>Hello ${name} ! </h2>
+        <h2>Hello ${username} ! </h2>
         <h1>Please use the following link to activate your account</h1>
-        <a href="${clientURL}/api/users/activate/${token}" target="_blank">
+        <a href="${clientURL}/api/users/verify/${token}" target="_blank">
         <hr />
         <p>This email may contain sensitive information</p>
       `,
@@ -145,28 +152,39 @@ const processRegister = async (req, res, next) => {
 
 const activateUserAccount = async (req, res, next) => {
   try {
+    //get token from request body
     const token = req.body.token;
+
+    //check if token exists
     if (!token) {
       throw createError(404, "Invalid token! Please try again.");
     }
 
     try {
+      //verify token with jwt key and get decoded data
       const decoded = jwt.verify(token, jwtActivationKey);
+      console.log("Decoded: ", decoded);
+
+      //check if decoded data exists
       if (!decoded) {
         throw createError(401, "Unable to verfy user! Please try again.");
       }
+
+      //check if user already exists
       const userExist = await User.exists({ email: decoded.email });
       if (userExist) {
         throw createError(409, "User already exists!Please login.");
       }
 
+      //create user with decoded data
       await User.create(decoded);
 
       return successResponse(res, {
         statusCode: 201,
-        message: `User account activated successfully!`,
+        message: `User account registered successfully!`,
       });
     } catch (error) {
+      //check if token expired or invalid
       if (error.name === "TokenExpiredError") {
         throw createError(401, "Token expired! Please try again.");
       } else if (error.name === "JsonWebTokenError") {
@@ -180,10 +198,46 @@ const activateUserAccount = async (req, res, next) => {
   }
 };
 
+const updateUserById = async (req, res, next) => {
+  try {
+    //get user id from request params
+    const userid = req.params.id;
+    const options = { password: 0 };
+    await findWithId(User, userid, options);
+
+    const updateOptions = { new: true, runValidators: true, context: "query" };
+
+    let updates = {};
+
+    for (let key in req.body) {
+      if (["username", "password"].includes(key)) {
+        updates[key] = req.body[key];
+      }
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userid,
+      updates,
+      updateOptions
+    ).select("-password");
+
+    if (!updatedUser) throw createError(404, "User not found!");
+
+    return successResponse(res, {
+      statusCode: 200,
+      message: "User were updated succesfully!",
+      payload: { updatedUser },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getUsers,
   getUserById,
   deleteUserById,
   processRegister,
   activateUserAccount,
+  updateUserById,
 };

@@ -1,19 +1,24 @@
 const { Schema, model } = require("mongoose");
 const bcrypt = require("bcryptjs");
-const { defaultUserImage } = require("../secret");
+const { validate } = require("./postModel");
 
 const userSchema = new Schema(
   {
-    name: {
+    username: {
       type: String,
       required: [true, "User Name is required"],
       trim: true,
-      minlength: [3, "Name can not be less than 3 characters"],
-      maxlength: [31, "Name can not exceed 50 characters"],
+      unique: true,
+      validate: {
+        validator: function (v) {
+          return /^[a-zA-Z0-9_]+$/.test(v);
+        },
+        message: "Please enter a valid username",
+      },
     },
     email: {
       type: String,
-      required: [true, "User Name is required"],
+      required: [true, "User email is required"],
       trim: true,
       unique: true,
       lowercase: true,
@@ -30,21 +35,8 @@ const userSchema = new Schema(
       minlength: [6, "Password can not be less than 6 characters"],
       set: (v) => bcrypt.hashSync(v, bcrypt.genSaltSync(10)),
     },
-    address: {
+    image: {
       type: String,
-      required: [true, "User address is required"],
-    },
-    phone: {
-      type: String,
-      required: [true, "User phopne number is required"],
-    },
-    isAdmin: {
-      type: Boolean,
-      default: false,
-    },
-    isBanned: {
-      type: Boolean,
-      default: false,
     },
   },
   { timestamps: true }

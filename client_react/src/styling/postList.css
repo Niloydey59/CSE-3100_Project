@@ -1,0 +1,6 @@
+/* src/styling/postList.css */
+.post-list {
+    flex-grow: 1;
+    padding: 15px;
+  }
+  

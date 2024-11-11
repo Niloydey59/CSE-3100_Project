@@ -10,6 +10,7 @@ const defaultUserImage =
 
 const jwtActivationKey = process.env.JWT_ACTIVATION_KEY || "ajdnaiudbauibh894";
 const jwtAccessKey = process.env.JWT_ACCESS_KEY || "ajdnaiudbauibh894";
+const jswtResetPassKey = process.env.JWT_RESET_PASS_KEY || "ajdnaiudbauibh894";
 
 const smtpUsername = process.env.SMTP_USERNAME || "";
 const smtpPassword = process.env.SMTP_PASSWORD || "";
@@ -26,6 +27,7 @@ module.exports = {
   defaultUserImage,
   jwtActivationKey,
   jwtAccessKey,
+  jswtResetPassKey,
   smtpUsername,
   smtpPassword,
   clientURL,

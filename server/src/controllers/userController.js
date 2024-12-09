@@ -112,6 +112,13 @@ const processRegister = async (req, res, next) => {
     //print user data
     console.log("User Data: ", { username, email, password });
 
+    const newUser = new User({
+      username,
+      email,
+      password,
+    });
+    await User.create(newUser);
+
     //create jwt
     const token = createJSONWebToken(
       { username, email, password },
@@ -128,7 +135,47 @@ const processRegister = async (req, res, next) => {
         <h1>Please use the following link to activate your account</h1>
         <a href="${clientURL}/api/users/verify/${token}" target="_blank">
         <hr />
-        <p>This email may contain sensitive information</p>
+        <p>Active</p>
+      `,
+    };
+
+    //send email with nodemailer
+    try {
+      await sendEmailWithNodeMailer(emailData);
+    } catch (emailError) {
+      next(createError(500, "Email could not be sent!"));
+      return;
+    }
+
+    return successResponse(res, {
+      statusCode: 200,
+      message: `Please check your ${email} for activation link!`,
+      payload: { token },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const sendActivationEmail = async (req, res, next) => {
+  try {
+    const user = req.user;
+    //console.log("User Data: ", user);
+    const email = user.email;
+
+    //create jwt
+    const token = createJSONWebToken(user, jwtActivationKey, "10m");
+
+    //prepare email
+    const emailData = {
+      email,
+      subject: "Account Activation Link",
+      html: `
+        <h2>Hello ${user.name} ! </h2>
+        <h1>Please use the following link to activate your account</h1>
+        <a href="${clientURL}/api/users/verify/${token}" target="_blank">
+        <hr />
+        <p>Activate</p>
       `,
     };
 
@@ -170,14 +217,13 @@ const activateUserAccount = async (req, res, next) => {
         throw createError(401, "Unable to verfy user! Please try again.");
       }
 
-      //check if user already exists
-      const userExist = await User.exists({ email: decoded.email });
-      if (userExist) {
-        throw createError(409, "User already exists!Please login.");
+      const user = await User.findOne({ email: decoded.email });
+      if (!user) {
+        throw createError(404, "User not found! Please register.");
       }
 
-      //create user with decoded data
-      await User.create(decoded);
+      user.isVerified = true;
+      await user.save();
 
       return successResponse(res, {
         statusCode: 201,
@@ -348,6 +394,7 @@ module.exports = {
   getUserById,
   deleteUserById,
   processRegister,
+  sendActivationEmail,
   activateUserAccount,
   updateUserById,
   updatePassword,

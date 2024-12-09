@@ -1,6 +1,7 @@
 const data = require("../data");
 const Post = require("../models/postModel");
 const User = require("../models/userModel");
+const Group = require("../models/groupModel");
 const seedUsers = async (req, res, next) => {
   try {
     // Delete all users
@@ -43,4 +44,38 @@ const seedPosts = async (req, res, next) => {
   }
 };
 
-module.exports = { seedUsers, seedPosts };
+const seedGroups = async (req, res, next) => {
+  try {
+    // Delete all groups
+    await Group.deleteMany({});
+
+    const groups = data.groups;
+    for (let group of groups) {
+      // Find the admin of the group(default admin JohnDoe)
+      const admin = await User.findOne({ username: "JohnDoe" });
+
+      // If the admin is not found, set the group to null
+      if (!admin) {
+        group = null;
+        continue;
+      }
+      // Replace the username with the admin's ID
+      group.admin = admin._id;
+
+      // Replace the members' usernames with their IDs
+      const members = [];
+      members.push(admin._id);
+      group.members = members;
+    }
+
+    // Create new groups
+    await Group.insertMany(groups);
+
+    // Success response
+    return res.status(201).json(groups);
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { seedUsers, seedPosts, seedGroups };

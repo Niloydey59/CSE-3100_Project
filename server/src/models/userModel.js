@@ -1,6 +1,5 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model, Mongoose } = require("mongoose");
 const bcrypt = require("bcryptjs");
-const { validate } = require("./postModel");
 
 const userSchema = new Schema(
   {
@@ -16,6 +15,7 @@ const userSchema = new Schema(
         message: "Please enter a valid username",
       },
     },
+
     email: {
       type: String,
       required: [true, "User email is required"],
@@ -29,14 +29,29 @@ const userSchema = new Schema(
         message: "Please enter a valid email address",
       },
     },
+
     password: {
       type: String,
       required: [true, "User password is required"],
       minlength: [6, "Password can not be less than 6 characters"],
       set: (v) => bcrypt.hashSync(v, bcrypt.genSaltSync(10)),
     },
-    image: {
-      type: String,
+
+    groups: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Groups",
+      },
+    ],
+
+    isAdmin: {
+      type: Boolean,
+      default: false,
+    },
+
+    isVerified: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true }

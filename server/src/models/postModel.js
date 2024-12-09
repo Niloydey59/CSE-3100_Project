@@ -8,33 +8,52 @@ const postSchema = new Schema(
       required: true,
       trim: true,
     },
+
     title: {
       type: String,
       required: true,
       trim: true,
     },
+
     content: {
       type: String,
     },
+
     tags: {
       type: [String],
       required: false,
       default: [],
     },
+
     image: {
       type: [String],
     },
+
     author: {
       type: Schema.Types.ObjectId,
       ref: "Users",
       required: [true, "Author is required"],
     },
+
+    groupId: {
+      type: Schema.Types.ObjectId,
+      ref: "Groups",
+    },
+
     likes: [
       {
         type: Schema.Types.ObjectId,
         ref: "Users",
       },
     ],
+
+    dislikes: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Users",
+      },
+    ],
+
     comments: [
       {
         type: Schema.Types.ObjectId,

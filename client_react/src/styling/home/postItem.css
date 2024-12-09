@@ -1,0 +1,107 @@
+/* src/styling/postItem.css */
+
+.post-item {
+  background-color: #262D34;
+  margin-bottom: 15px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.post-item:hover {
+  background-color: #3b444e;
+  transform: translateY(-3px);
+}
+
+.post-title {
+  text-decoration: none;
+  color: #fff;
+}
+
+.post-title h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.post-title p {
+  font-size: 16px;
+  color: #ccc;
+}
+
+.post-tags {
+  margin-top: 10px;
+}
+
+.tag {
+  display: inline-block;
+  background-color: #444c56;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 14px;
+  margin-right: 5px;
+  color: #ddd;
+}
+
+.post-stats {
+  margin-top: 15px;
+  font-size: 14px;
+  color: #aaa;
+}
+
+.post-actions {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #1e252c;
+  border-radius: 8px;
+  padding: 10px;
+  margin-top: 15px;
+}
+
+/* Like and Dislike buttons */
+.like-icon {
+  color: #999; /* Default color */
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+}
+
+.like-iconliked,
+.like-icondisliked {
+  color: #007bff; /* Blue color when liked/disliked */
+}
+
+.like-iconliked:hover,
+.like-icondisliked:hover {
+  color: #0056b3; /* Darker blue on hover */
+}
+
+/* General action button styling */
+.action-button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  color: #999;
+  transition: color 0.2s ease;
+}
+
+.action-button:hover {
+  color: #f39c12; /* Yellow color on hover */
+}
+
+.action-button i {
+  font-size: 16px;
+}
+
+.action-button span {
+  font-size: 14px;
+}
+
+.post-comments {
+  display: flex;
+  align-items: center;
+  color: #aaa;
+}

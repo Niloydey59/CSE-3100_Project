@@ -1,9 +1,8 @@
-// src/components/PostList.jsx
 import React, { useEffect, useState } from "react";
 
 import PostItem from "./PostCard";
 import { fetchPosts } from "../../FetchApi/index";
-import "../../styling/postList.css";
+import "../../styling/home/postList.css";
 
 const PostList = () => {
   const [posts, setPosts] = useState([]);
@@ -15,7 +14,6 @@ const PostList = () => {
         console.log("Data received:", data);
         if (data && data.payload && data.payload.posts) {
           setPosts(data.payload.posts);
-          console.log("Posts loaded:", data.payload.posts);
         } else {
           console.error("Unexpected data structure:", data);
         }
@@ -27,10 +25,18 @@ const PostList = () => {
     loadPosts();
   }, []);
 
+  const updatePost = (updatedPost) => {
+    setPosts((prevPosts) =>
+      prevPosts.map((post) =>
+        post._id === updatedPost._id ? updatedPost : post
+      )
+    );
+  };
+
   return (
     <div className="post-list">
       {posts.map((post) => (
-        <PostItem key={post._id} post={post} />
+        <PostItem key={post._id} post={post} updatePost={updatePost} />
       ))}
     </div>
   );

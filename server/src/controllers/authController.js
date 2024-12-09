@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/userModel");
 const { successResponse } = require("./responseController");
 const { createJSONWebToken } = require("../helper/jsonwebtoken");
-const { jwtAccessKey } = require("../secret");
+const { jwtAccessKey, jwtRefreshKey } = require("../secret");
 
 const userLogin = async (req, res, next) => {
   try {
@@ -27,9 +27,18 @@ const userLogin = async (req, res, next) => {
     //isBanned
     //generate token, cookie
     //create jwt
-    const accesstoken = createJSONWebToken({ email }, jwtAccessKey, "10m");
+    const accesstoken = createJSONWebToken({ user }, jwtAccessKey, "15m");
+    const refreshtoken = createJSONWebToken({ user }, jwtRefreshKey, "7d");
+
     res.cookie("access_token", accesstoken, {
       maxAge: 15 * 60 * 1000, // 15 minutes
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    });
+
+    res.cookie("refresh_token", refreshtoken, {
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       httpOnly: true,
       secure: true,
       sameSite: "none",
@@ -50,6 +59,7 @@ const userLogout = async (req, res, next) => {
   try {
     //clear cookie
     res.clearCookie("access_token");
+    res.clearCookie("refresh_token");
     //success response
     return successResponse(res, {
       statusCode: 200,
@@ -61,4 +71,19 @@ const userLogout = async (req, res, next) => {
   }
 };
 
-module.exports = { userLogin, userLogout };
+const getCurrentUser = async (req, res, next) => {
+  try {
+    //get user from request
+    const user = req.user;
+    //success response
+    return successResponse(res, {
+      statusCode: 200,
+      message: "Current user fetched successfully!",
+      payload: { user },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { userLogin, userLogout, getCurrentUser };

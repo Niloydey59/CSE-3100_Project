@@ -1,38 +1,51 @@
 const createError = require("http-errors"); // error-handling middleware
 const jwt = require("jsonwebtoken");
-const { jwtAccessKey } = require("../secret");
+const { jwtAccessKey, jwtRefreshKey } = require("../secret");
+const { createJSONWebToken } = require("../helper/jsonwebtoken");
+const { refreshTokenHandler } = require("../services/finditem");
 
-const isLoggedIn = (req, res, next) => {
+const isLoggedIn = async (req, res, next) => {
   try {
-    const token = req.cookies.accessToken;
-    if (!token) {
+    console.log("Cookies: ", req.cookies);
+    const accessToken = req.cookies.access_token;
+    const refreshToken = req.cookies.refresh_token;
+    if (!accessToken && !refreshToken) {
       throw createError(401, "Acess Denied! Please login.");
     }
-    const decoded = jwt.verify(token, jwtAccessKey);
-    if (!decoded) {
-      throw createError(401, "Unauthorized! Please login.");
+    if (!accessToken || req.cookies.access_token === "null") {
+      console.log("Calling refreshTokenHandler");
+
+      const newAccessToken = await refreshTokenHandler(refreshToken);
+      console.log("New Access Token: ", newAccessToken);
+      res.cookie("access_token", newAccessToken, {
+        maxAge: 15 * 60 * 1000, // 15 minutes
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+      });
+      const decoded = jwt.verify(newAccessToken, jwtAccessKey);
+      req.user = decoded.user;
+      next();
+    } else {
+      const decoded = jwt.verify(accessToken, jwtAccessKey);
+      console.log("Decoded: ", decoded);
+      req.user = decoded.user;
+      return next();
     }
-    //console.log(decoded);
-    req.user = decoded.user;
-    next();
   } catch (error) {
-    return next(error);
+    next(error);
   }
 };
 
 const isLoggedOut = (req, res, next) => {
-  const token = req.cookies.accessToken;
+  const accessToken = req.cookies.access_token;
+  const refreshToken = req.cookies.refresh_token;
 
-  if (!token) {
+  if (!accessToken && !refreshToken) {
     return next(); // No token, proceed to the next middleware
   }
 
-  const decoded = jwt.verify(token, jwtAccessKey);
-  if (decoded) {
-    return next(createError(400, "User already logged in!"));
-  }
-
-  return next();
+  return next(createError(400, "User already logged in!"));
 };
 
 const isAdmin = (req, res, next) => {

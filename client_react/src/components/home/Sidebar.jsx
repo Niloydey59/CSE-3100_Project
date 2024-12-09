@@ -1,6 +1,6 @@
 import React from "react";
 
-import "../../styling/sidebar.css";
+import "../../styling/home/sidebar.css";
 const Sidebar = () => {
   return (
     <aside className="sidebar">

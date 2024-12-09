@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 
-import "../styling/home.css";
+import "../styling/home/home.css";
 
 import PageTitle from "../components/common/PageTitle";
 import Sidebar from "../components/home/Sidebar";

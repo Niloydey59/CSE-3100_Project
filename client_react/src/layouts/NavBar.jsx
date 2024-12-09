@@ -1,12 +1,25 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/authcontext"; // Import useAuth from context
 import "../styling/header.css"; // Make sure this path is correct for your setup
 
 const Navbar = () => {
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+  const { currentUser } = useAuth(); // Get the currentUser from context
+  const navigate = useNavigate(); // Use navigate to programmatically navigate
 
   const handleToggleNav = () => {
     setIsMobileNavOpen(!isMobileNavOpen);
+  };
+
+  const handleProfileClick = () => {
+    console.log("Profile clicked");
+    if (currentUser) {
+      console.log("User is logged in");
+      setTimeout(() => navigate("/dashboard"), 0);
+    } else {
+      setTimeout(() => navigate("/login"), 0);
+    }
   };
 
   return (
@@ -20,7 +33,7 @@ const Navbar = () => {
           <Link to="/" className="icon">
             <i className="fa-solid fa-house"></i>
           </Link>
-          <Link to="#" className="icon">
+          <Link to="/groups" className="icon">
             <i className="fa-solid fa-users-line"></i>
           </Link>
         </section>
@@ -39,10 +52,7 @@ const Navbar = () => {
         </div>
 
         <section id="right-section">
-          <Link to="#" className="icon">
-            <i className="fa-solid fa-message"></i>
-          </Link>
-          <Link to="/login" className="icon">
+          <Link to="#" className="icon" onClick={handleProfileClick}>
             <i className="fa-solid fa-user"></i>
           </Link>
         </section>

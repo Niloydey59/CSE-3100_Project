@@ -1,0 +1,219 @@
+.Main {
+	background: #1B1A55;
+	background: -webkit-linear-gradient(to right, hsl(216, 88%, 7%), hsl(212, 84%, 25%));
+	background: linear-gradient(to right, hsl(216, 88%, 7%), hsl(212, 84%, 25%));
+	background-repeat: no-repeat;
+  }
+  
+  .login-section {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 110vh;
+	width: 100%;
+	padding-bottom: 50px;
+  }
+  
+  .login-main {
+	background-color: #FFFFFF;
+	border-radius: 10px;
+	box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+	position: relative;
+	overflow: hidden;
+	width: 768px;
+	max-width: 100%;
+	min-height: 480px;
+	transition: all ease-in-out 0.2s;
+	display: flex;
+  }
+  
+  .login-main:hover {
+	transform: scale(1.01);
+	box-shadow: 12px 12px 2px 1px #535C91;
+	border-radius: 0px;
+  }
+  
+  .login-main:focus-within {
+	transform: scale(1.01);
+	box-shadow: 12px 12px 2px 1px #535C91;
+	border-radius: 0px;
+  }
+  
+  .form-container {
+	position: absolute;
+	top: 0;
+	height: 100%;
+	width: 50%;
+	transition: all 0.6s ease-in-out;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+  }
+  
+  .sign-in-container {
+	left: 0;
+	z-index: 2;
+  }
+  
+  .login-main.right-panel-active .sign-in-container {
+	transform: translateX(100%);
+  }
+  
+  .sign-up-container {
+	left: 0;
+	opacity: 0;
+	z-index: 1;
+  }
+  
+  .login-main.right-panel-active .sign-up-container {
+	transform: translateX(100%);
+	opacity: 1;
+	z-index: 5;
+	animation: show 0.6s;
+  }
+  
+  @keyframes show {
+	0%, 49.99% {
+	  opacity: 0;
+	  z-index: 1;
+	}
+	
+	50%, 100% {
+	  opacity: 1;
+	  z-index: 5;
+	}
+  }
+  
+  .overlay-container {
+	position: absolute;
+	top: 0;
+	left: 50%;
+	width: 50%;
+	height: 100%;
+	overflow: hidden;
+	transition: transform 0.6s ease-in-out;
+	z-index: 100;
+  }
+  
+  .login-main.right-panel-active .overlay-container {
+	transform: translateX(-100%);
+  }
+  
+  .overlay {
+	background: #874CCC;
+	background: -webkit-linear-gradient(to right, #10439F, #F27BBD);
+	background: linear-gradient(to right, #10439F, #F27BBD);
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: 0 0;
+	color: hsl(0, 0%, 100%);
+	position: relative;
+	left: -100%;
+	height: 100%;
+	width: 200%;
+	transform: translateX(0);
+	transition: transform 0.6s ease-in-out;
+  }
+  
+  .login-main.right-panel-active .overlay {
+	transform: translateX(50%);
+  }
+  
+  .overlay-panel {
+	position: absolute;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	padding: 0 40px;
+	text-align: center;
+	top: 0;
+	height: 100%;
+	width: 50%;
+	transform: translateX(0);
+	transition: transform 0.6s ease-in-out;
+  }
+  
+  .overlay-left {
+	transform: translateX(-20%);
+  }
+  
+  .login-main.right-panel-active .overlay-left {
+	transform: translateX(0);
+  }
+  
+  .overlay-right {
+	right: 0;
+	transform: translateX(0);
+  }
+  
+  .login-main.right-panel-active .overlay-right {
+	transform: translateX(20%);
+  }
+  
+  .login-main button {
+	border-radius: 20px;
+	border: 1px solid #535C91;
+	background-color: #535C91;
+	color: hsl(0, 0%, 100%);
+	font-size: 12px;
+	font-weight: bold;
+	margin: 20px;
+	padding: 12px 45px;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	transition: transform 80ms ease-in;
+  }
+  
+  .login-main button:active {
+	transform: scale(0.95);
+  }
+  
+  .login-main button:focus {
+	outline: none;
+  }
+  
+  .login-main button.ghost {
+	background-color: transparent;
+	border-color: hsl(0, 0%, 100%);
+  }
+  
+  .login-main form {
+	background-color: hsl(0, 0%, 95%);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	padding: 0 50px;
+	height: 100%;
+	
+  }
+  
+  .login-main input {
+	background-color: hsl(0, 0%, 100%);
+	border: none;
+	padding: 12px 15px;
+	margin: 8px 0;
+	width: 100%;
+  }
+
+  .error {
+	color: red;
+	font-size: 0.875em;
+	margin-top: 5px;
+	text-align: left;
+  }
+
+  #fp {
+	display: block;
+	margin-top: 10px;
+	color: #007bff;
+	text-decoration: none;
+	font-size: 0.875em;
+	transition: color 0.3s ease;
+  }
+  
+  #fp:hover {
+	color: #0056b3;
+	text-decoration: underline;
+  }

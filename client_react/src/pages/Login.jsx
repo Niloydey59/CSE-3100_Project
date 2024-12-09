@@ -1,17 +1,36 @@
-import React from "react";
-import { Helmet } from "react-helmet";
+import React, { useState } from "react";
+import SignInForm from "../components/login/signInForm";
+import SignUpForm from "../components/login/signUpForm";
+import Overlay from "../components/login/overlay";
+import "../styling/login/login.css";
 
-import PageTitle from "../components/common/PageTitle";
+const LoginPage = () => {
+  const [isSignUpActive, setIsSignUpActive] = useState(false);
 
-const Login = () => {
+  const togglePanel = () => setIsSignUpActive(!isSignUpActive);
+
   return (
-    <div>
-      <PageTitle title="Login Page" />
-      <h1>Login Page</h1>
-      <h2>Welcome to the Login Page</h2>
-      <h2>Login Form</h2>
-    </div>
+    <main className="Main">
+      <section className="login-section">
+        <div
+          className={`login-main ${isSignUpActive ? "right-panel-active" : ""}`}
+        >
+          {/* Sign-Up Form */}
+          <div className="form-container sign-up-container">
+            <SignUpForm />
+          </div>
+
+          {/* Sign-In Form */}
+          <div className="form-container sign-in-container">
+            <SignInForm />
+          </div>
+
+          {/* Overlay */}
+          <Overlay isSignUpActive={isSignUpActive} togglePanel={togglePanel} />
+        </div>
+      </section>
+    </main>
   );
 };
 
-export default Login;
+export default LoginPage;

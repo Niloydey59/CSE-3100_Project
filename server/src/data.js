@@ -21,6 +21,7 @@ const data = {
       tags: ["introduction", "welcome"],
       author: "60d0fe4f5311236168a109ca", // Replace with a valid author ID from your database
       likes: ["60d0fe4f5311236168a109cb"], // Replace with valid author IDs
+      dislikes: ["60d0fe4f5311236168a109cb"], // Replace with valid author IDs
       comments: ["60d0fe4f5311236168a109cc"], // Replace with valid comment IDs
       image: ["path/to/postImage1.jpg"], // Add image attribute
     },
@@ -31,6 +32,7 @@ const data = {
       tags: ["update", "news"],
       author: "60d0fe4f5311236168a109ca", // Replace with a valid author ID from your database
       likes: ["60d0fe4f5311236168a109cb"], // Replace with valid author IDs
+      dislikes: ["60d0fe4f5311236168a109cb"], // Replace with valid author IDs
       comments: ["60d0fe4f5311236168a109cc"], // Replace with valid comment IDs
       image: ["path/to/postImage2.jpg"], // Add image attribute
     },
@@ -41,6 +43,7 @@ const data = {
       tags: ["announcement", "event"],
       author: "60d0fe4f5311236168a109ca", // Replace with a valid author ID from your database
       likes: ["60d0fe4f5311236168a109cb"], // Replace with valid author IDs
+      dislikes: ["60d0fe4f5311236168a109cb"], // Replace with valid author IDs
       comments: ["60d0fe4f5311236168a109cc"], // Replace with valid comment IDs
       image: ["path/to/postImage3.jpg"], // Add image attribute
     },
@@ -51,6 +54,7 @@ const data = {
       tags: ["discussion", "general"],
       author: "60d0fe4f5311236168a109ca", // Replace with a valid author ID from your database
       likes: ["60d0fe4f5311236168a109cb"], // Replace with valid author IDs
+      dislikes: ["60d0fe4f5311236168a109cb"], // Replace with valid author IDs
       comments: ["60d0fe4f5311236168a109cc"], // Replace with valid comment IDs
       image: ["path/to/postImage4.jpg"], // Add image attribute
     },
@@ -61,6 +65,7 @@ const data = {
       tags: ["question", "help"],
       author: "60d0fe4f5311236168a109ca", // Replace with a valid author ID from your database
       likes: ["60d0fe4f5311236168a109cb"], // Replace with valid author IDs
+      dislikes: ["60d0fe4f5311236168a109cb"], // Replace with valid author IDs
       comments: ["60d0fe4f5311236168a109cc"], // Replace with valid comment IDs
       image: ["path/to/postImage5.jpg"], // Add image attribute
     },
@@ -71,6 +76,7 @@ const data = {
       tags: ["feedback", "suggestion"],
       author: "60d0fe4f5311236168a109ca", // Replace with a valid author ID from your database
       likes: ["60d0fe4f5311236168a109cb"], // Replace with valid author IDs
+      dislikes: ["60d0fe4f5311236168a109cb"], // Replace with valid author IDs
       comments: ["60d0fe4f5311236168a109cc"], // Replace with valid comment IDs
       image: ["path/to/postImage6.jpg"], // Add image attribute
     },
@@ -81,6 +87,7 @@ const data = {
       tags: ["announcement", "update"],
       author: "60d0fe4f5311236168a109ca", // Replace with a valid author ID from your database
       likes: ["60d0fe4f5311236168a109cb"], // Replace with valid author IDs
+      dislikes: ["60d0fe4f5311236168a109cb"], // Replace with valid author IDs
       comments: ["60d0fe4f5311236168a109cc"], // Replace with valid comment IDs
       image: ["path/to/postImage7.jpg"], // Add image attribute
     },
@@ -91,6 +98,7 @@ const data = {
       tags: ["discussion", "topic"],
       author: "60d0fe4f5311236168a109ca", // Replace with a valid author ID from your database
       likes: ["60d0fe4f5311236168a109cb"], // Replace with valid author IDs
+      dislikes: ["60d0fe4f5311236168a109cb"], // Replace with valid author IDs
       comments: ["60d0fe4f5311236168a109cc"], // Replace with valid comment IDs
       image: ["path/to/postImage8.jpg"], // Add image attribute
     },
@@ -101,6 +109,7 @@ const data = {
       tags: ["question", "query"],
       author: "60d0fe4f5311236168a109ca", // Replace with a valid author ID from your database
       likes: ["60d0fe4f5311236168a109cb"], // Replace with valid author IDs
+      dislikes: ["60d0fe4f5311236168a109cb"], // Replace with valid author IDs
       comments: ["60d0fe4f5311236168a109cc"], // Replace with valid comment IDs
       image: ["path/to/postImage9.jpg"], // Add image attribute
     },
@@ -111,8 +120,30 @@ const data = {
       tags: ["feedback", "review"],
       author: "60d0fe4f5311236168a109ca", // Replace with a valid author ID from your database
       likes: ["60d0fe4f5311236168a109cb"], // Replace with valid author IDs
+      dislikes: ["60d0fe4f5311236168a109cb"], // Replace with valid author IDs
       comments: ["60d0fe4f5311236168a109cc"], // Replace with valid comment IDs
       image: ["path/to/postImage10.jpg"], // Add image attribute
+    },
+  ],
+
+  groups: [
+    {
+      name: "Group 1",
+      description: "This is the description of Group 1.",
+      members: ["60d0fe4f5311236168a109ca"], // Replace with valid member IDs from your database
+      admin: "60d0fe4f5311236168a109cb", // Replace with a valid admin ID from your database
+    },
+    {
+      name: "Group 2",
+      description: "This is the description of Group 2.",
+      members: ["60d0fe4f5311236168a109ca"], // Replace with valid member IDs from your database
+      admin: "60d0fe4f5311236168a109cb", // Replace with a valid admin ID from your database
+    },
+    {
+      name: "Group 3",
+      description: "This is the description of Group 3.",
+      members: ["60d0fe4f5311236168a109ca"], // Replace with valid member IDs from your database
+      admin: "60d0fe4f5311236168a109cb", // Replace with a valid admin ID from your database
     },
   ],
 };

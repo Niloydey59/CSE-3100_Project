@@ -4,6 +4,66 @@ const { successResponse } = require("./responseController");
 const Post = require("../models/postModel");
 const User = require("../models/userModel");
 const { findWithId } = require("../services/finditem");
+const cloudinary = require("../config/cloudinary");
+
+const createPost = async (req, res, next) => {
+  try {
+    console.log("Request Body: ", req.body);
+    const { title, content, tags } = req.body;
+
+    // Check if image is uploaded
+    const images = req.files;
+    if (!images || images.length === 0) {
+      throw createError(400, "Image is required");
+    }
+    // Check each image size
+    for (const image of images) {
+      if (image.size > 1024 * 1024 * 2) {
+        throw createError(400, "Each image should be less than 2MB");
+      }
+    }
+
+    //console.log("Uploaded Image:", images);
+
+    const user = req.user;
+
+    //print post data
+    console.log("Post Data: ", {
+      username: user.username,
+      title,
+      content,
+      tags,
+      author: user,
+    });
+
+    // Upload images to Cloudinary
+    const imageUrls = [];
+    for (const image of images) {
+      const response = await cloudinary.uploader.upload(image.path, {
+        folder: "StackRuet/posts",
+      });
+      imageUrls.push(response.secure_url);
+    }
+
+    //create product
+    const post = await Post.create({
+      username: user.username,
+      title,
+      content,
+      tags,
+      image: imageUrls,
+      author: user,
+    });
+
+    return successResponse(res, {
+      statusCode: 200,
+      message: `Post created successfully`,
+      payload: post,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 const getPosts = async (req, res, next) => {
   try {
@@ -109,4 +169,95 @@ const updatePostById = async (req, res, next) => {
   }
 };
 
-module.exports = { getPosts, getPostById, updatePostById };
+const likePostById = async (req, res, next) => {
+  try {
+    //get post id from request params
+    //console.log(req.params);
+    const postid = req.params.id;
+    const options = {};
+    //console.log(req.user);
+    const user = await findWithId(User, req.user._id, options);
+    const post = await findWithId(Post, postid, options);
+
+    //check if user already liked the post
+    if (post.likes.includes(user._id)) {
+      // remove user id from post likes array
+      post.likes = post.likes.filter((like) => !like.equals(user._id));
+
+      // save post
+      const updatedPost = await post.save();
+
+      return successResponse(res, {
+        statusCode: 200,
+        message: "Like was removed successfully!",
+        payload: { updatedPost },
+      });
+    }
+
+    //add user id to post likes array
+    post.likes.push(user._id);
+
+    //save post
+    const updatedPost = await post.save();
+
+    return successResponse(res, {
+      statusCode: 200,
+      message: "Post was liked succesfully!",
+      payload: { updatedPost },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const dislikePostById = async (req, res, next) => {
+  try {
+    //get post id from request params
+    console.log(req.params);
+    const postid = req.params.id;
+    const options = {};
+    console.log(req.user);
+    const user = await findWithId(User, req.user._id, options);
+    const post = await findWithId(Post, postid, options);
+
+    //check if user already disliked the post
+    if (post.dislikes.includes(user._id)) {
+      // remove user id from post likes array
+      post.dislikes = post.dislikes.filter(
+        (dislike) => !dislike.equals(user._id)
+      );
+
+      // save post
+      const updatedPost = await post.save();
+
+      return successResponse(res, {
+        statusCode: 200,
+        message: "Dislike was removed successfully!",
+        payload: { updatedPost },
+      });
+    }
+
+    //add user id to post likes array
+    post.dislikes.push(user._id);
+
+    //save post
+    const updatedPost = await post.save();
+
+    return successResponse(res, {
+      statusCode: 200,
+      message: "Post was disliked succesfully!",
+      payload: { updatedPost },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = {
+  createPost,
+  getPosts,
+  getPostById,
+  updatePostById,
+  likePostById,
+  dislikePostById,
+};

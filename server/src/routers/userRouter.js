@@ -9,6 +9,7 @@ const {
   resetPassword,
   updatePassword,
   forgetPassword,
+  sendActivationEmail,
 } = require("../controllers/userController");
 const upload = require("../middlewares/uploadFile");
 const {
@@ -30,6 +31,8 @@ userRouter.post(
   runValidation,
   processRegister
 ); // Register user
+
+userRouter.post("/send-verification-email", isLoggedIn, sendActivationEmail); // Send activation email
 
 userRouter.post("/verify", isLoggedIn, activateUserAccount); // Activate user account
 

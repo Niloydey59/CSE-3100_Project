@@ -12,6 +12,7 @@ const seedRouter = require("./routers/seedRouter");
 const { errorResponse } = require("./controllers/responseController");
 const authRouter = require("./routers/authRouter");
 const postRouter = require("./routers/postRouter");
+const groupRouter = require("./routers/groupRouter");
 
 const app = express();
 
@@ -46,6 +47,7 @@ app.use("/api/seed", seedRouter);
 app.use("/api/users", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/posts", postRouter);
+app.use("/api/groups", groupRouter);
 
 app.get("/", (req, res) => {
   res.status(200).send({

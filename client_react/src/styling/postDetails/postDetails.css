@@ -1,0 +1,25 @@
+/* src/styling/postDetails.css */
+.post-details {
+    max-width: 100%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #262D34;
+    border-radius: 10px;
+    color: #ffffff;
+  }
+  
+  .post-details h1 {
+    color: #aba11d;
+  }
+  
+  .post-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  .post-tags {
+    margin-top: 20px;
+    color: #aaaaaa;
+  }
+  

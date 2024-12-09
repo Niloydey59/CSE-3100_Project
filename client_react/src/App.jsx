@@ -4,16 +4,19 @@ import "./index.css";
 import Navbar from "./layouts/NavBar";
 import { BrowserRouter } from "react-router-dom";
 import AppRoutes from "./routes/index";
+import { AuthProvider } from "./context/authcontext";
 
 function App() {
   return (
     console.log("App.js"),
     (
       <BrowserRouter>
-        <Navbar />
-        <main>
-          <AppRoutes />
-        </main>
+        <AuthProvider>
+          <Navbar />
+          <main>
+            <AppRoutes />
+          </main>
+        </AuthProvider>
       </BrowserRouter>
     )
   );

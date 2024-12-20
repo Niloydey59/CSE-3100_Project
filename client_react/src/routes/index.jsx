@@ -9,11 +9,13 @@ import Groups from "../pages/Groups";
 import PostDetails from "../pages/postDetails";
 import GroupDetailsPage from "../pages/groupDetails";
 import Dashboard from "../pages/Dashboard";
+import SearchResults from "../pages/SearchResults";
 
 const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/search" element={<SearchResults />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/post/:postId" element={<PostDetails />} />
       <Route path="/register" element={<Register />} />

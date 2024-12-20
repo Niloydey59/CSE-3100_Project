@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/authcontext"; // Import useAuth from context
-import "../styling/header.css"; // Make sure this path is correct for your setup
+import { useAuth } from "../context/authcontext";
+import "../styling/header.css";
 
 const Navbar = () => {
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
-  const { currentUser } = useAuth(); // Get the currentUser from context
-  const navigate = useNavigate(); // Use navigate to programmatically navigate
+  const [searchQuery, setSearchQuery] = useState(""); // State for search query
+  const { currentUser } = useAuth();
+  const navigate = useNavigate();
 
   const handleToggleNav = () => {
     setIsMobileNavOpen(!isMobileNavOpen);
@@ -15,10 +16,17 @@ const Navbar = () => {
   const handleProfileClick = () => {
     console.log("Profile clicked");
     if (currentUser) {
-      console.log("User is logged in");
+      console.log("Navigating to dashboard");
       setTimeout(() => navigate("/dashboard"), 0);
     } else {
       setTimeout(() => navigate("/login"), 0);
+    }
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/search?query=${searchQuery}`);
     }
   };
 
@@ -38,18 +46,23 @@ const Navbar = () => {
           </Link>
         </section>
 
-        <div id="search-bar">
+        <form id="search-bar" onSubmit={handleSearchSubmit}>
           <select>
             <option value="all">All</option>
             <option value="posts">Posts</option>
             <option value="users">Users</option>
           </select>
 
-          <input type="text" placeholder="Type here to Search" />
-          <button>
+          <input
+            type="text"
+            placeholder="Type here to Search"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <button type="submit">
             <i className="fa-solid fa-magnifying-glass"></i>
           </button>
-        </div>
+        </form>
 
         <section id="right-section">
           <Link to="#" className="icon" onClick={handleProfileClick}>
@@ -77,7 +90,7 @@ const Navbar = () => {
                 </Link>
               </li>
               <li>
-                <Link to="#" className="icon">
+                <Link to="/groups" className="icon">
                   <i className="fa-solid fa-users-line"></i>
                 </Link>
               </li>

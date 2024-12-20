@@ -1,3 +1,7 @@
+/* slick-carousel styles */
+@import "../node_modules/slick-carousel/slick/slick.css";
+@import "../node_modules/slick-carousel/slick/slick-theme.css";
+
 body{
     background-color: #1E252B;
     font-family: Arial, sans-serif;

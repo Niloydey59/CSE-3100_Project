@@ -34,10 +34,28 @@ api.interceptors.response.use(
   }
 );
 
-// post api call
-export const fetchPosts = async () => {
+// Create a new post API call
+export const createPost = async (postData) => {
   try {
-    const response = await api.get("/posts");
+    const response = await api.post("/posts", postData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    console.log("Post created:", response.data);
+    return response.data; // { payload: { post: {} } }
+  } catch (error) {
+    console.error("Error creating post:", error);
+    throw error;
+  }
+};
+
+// post api call
+export const fetchPosts = async ({ search = "", limit = 5, page = 1 }) => {
+  try {
+    const response = await api.get("/posts", {
+      params: { search, limit, page },
+    });
     console.log("Posts:", response.data);
     return response.data; // { payload: { posts: [] } }
   } catch (error) {

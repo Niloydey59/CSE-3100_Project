@@ -8,18 +8,27 @@ const cloudinary = require("../config/cloudinary");
 
 const createPost = async (req, res, next) => {
   try {
-    console.log("Request Body: ", req.body);
+    //console.log("Request Body: ", req.body);
     const { title, content, tags } = req.body;
 
     // Check if image is uploaded
     const images = req.files;
-    if (!images || images.length === 0) {
-      throw createError(400, "Image is required");
-    }
-    // Check each image size
-    for (const image of images) {
-      if (image.size > 1024 * 1024 * 2) {
-        throw createError(400, "Each image should be less than 2MB");
+    console.log("Images: ", images);
+    const imageUrls = [];
+    if (images && images.length > 0) {
+      // Check each image size
+      for (const image of images) {
+        if (image.size > 1024 * 1024 * 2) {
+          throw createError(400, "Each image should be less than 2MB");
+        }
+      }
+      // Upload images to Cloudinary
+
+      for (const image of images) {
+        const response = await cloudinary.uploader.upload(image.path, {
+          folder: "StackRuet/posts",
+        });
+        imageUrls.push(response.secure_url);
       }
     }
 
@@ -35,15 +44,6 @@ const createPost = async (req, res, next) => {
       tags,
       author: user,
     });
-
-    // Upload images to Cloudinary
-    const imageUrls = [];
-    for (const image of images) {
-      const response = await cloudinary.uploader.upload(image.path, {
-        folder: "StackRuet/posts",
-      });
-      imageUrls.push(response.secure_url);
-    }
 
     //create product
     const post = await Post.create({

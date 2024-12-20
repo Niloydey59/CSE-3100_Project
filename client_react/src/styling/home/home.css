@@ -1,12 +1,48 @@
-/* src/styling/home.css */
 .home-page {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-  }
-  
-  .main-content {
-    display: flex;
-    background-color: #1E252B;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Full viewport height */
+}
+
+.main-content {
+  display: flex; /* Sidebar and post section side by side */
+  flex: 1; /* Takes up all available vertical space */
+  background-color: #1E252B;
+}
+
+.sidebar {
+  flex: 0 0 250px; /* Fixed width for the sidebar */
+  background-color: #2F363D; /* Sidebar background color */
+  padding: 20px;
+  box-sizing: border-box; /* Include padding in width */
+  height: 100%; /* Ensure the sidebar spans the full height */
+  overflow-y: auto; /* Scroll if content exceeds height */
+}
+
+.post-section {
+  flex: 1; /* Take the remaining space after the sidebar */
+  background-color: #262D34; /* Background for the post section */
+  padding: 20px; /* Add spacing */
+  box-sizing: border-box; /* Include padding in dimensions */
+  overflow-y: auto; /* Scroll if posts exceed height */
+}
+
+.post-list {
+  display: flex;
+  flex-direction: column; /* Stack posts vertically */
+  gap: 15px; /* Space between posts */
+}
+
+.post-item {
+  background-color: #333A41; /* Individual post card background */
+  border-radius: 10px;
+  padding: 15px;
+  color: #FFFFFF;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.post-item:hover {
+  transform: translateY(-5px);
+  background-color: #3B444E;
+}

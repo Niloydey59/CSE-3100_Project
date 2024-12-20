@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "../../styling/home/postItem.css";
 import { dislikePost, likePost } from "../../FetchApi";
@@ -6,12 +6,18 @@ import { useAuth } from "../../context/authcontext"; // Import useAuth to get cu
 
 const PostItem = ({ post, updatePost }) => {
   const { currentUser } = useAuth(); // Get currentUser from context
+  const [showPopup, setShowPopup] = useState(false);
 
   const truncate = (str, n) => {
     return str.length > n ? str.substring(0, n) + "..." : str;
   };
 
   const handleLike = async (id) => {
+    if (!currentUser) {
+      setShowPopup(true);
+      return;
+    }
+
     try {
       const data = await likePost(id);
       console.log("Post liked:", data.payload.updatedPost);
@@ -22,6 +28,11 @@ const PostItem = ({ post, updatePost }) => {
   };
 
   const handleDislike = async (id) => {
+    if (!currentUser) {
+      setShowPopup(true);
+      return;
+    }
+
     try {
       const data = await dislikePost(id);
       console.log("Post disliked:", data.payload.updatedPost);
@@ -29,6 +40,11 @@ const PostItem = ({ post, updatePost }) => {
     } catch (error) {
       console.error("Error disliking post:", error);
     }
+  };
+
+  // close the popup
+  const closePopup = () => {
+    setShowPopup(false);
   };
 
   // Check if the currentUser has liked or disliked the post
@@ -72,6 +88,24 @@ const PostItem = ({ post, updatePost }) => {
         </span>
         <span>{post.comments.length} Comments</span>
       </div>
+
+      {/* {Popup Menu}  */}
+      {showPopup && (
+        <div className="popup-overlay">
+          <div className="popup">
+            <h2>You need to log in</h2>
+            <p>Login to like or dislike posts.</p>
+            <div className="popup-actions">
+              <Link to="/login" className="popup-button">
+                Login Now
+              </Link>
+              <button className="popup-button close" onClick={closePopup}>
+                Maybe Later
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

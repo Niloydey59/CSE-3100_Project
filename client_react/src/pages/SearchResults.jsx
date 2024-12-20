@@ -1,60 +1,50 @@
 import React, { useEffect, useState } from "react";
-import { Helmet } from "react-helmet";
+import { useLocation } from "react-router-dom";
 
 import "../styling/home/home.css";
 
 import PageTitle from "../components/common/PageTitle";
-import Sidebar from "../components/home/Sidebar";
 import PostList from "../components/home/PostList";
-import CreatePost from "../components/home/CreatePost";
 import { fetchPosts } from "../FetchApi";
 
-const Home = () => {
+const SearchResults = () => {
   const [posts, setPosts] = useState([]);
-  const [search, setSearch] = useState("");
-  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [totalPosts, setTotalPosts] = useState(0); // Add totalPosts state
-  const limit = 5; // Posts per page
+  const [totalPosts, setTotalPosts] = useState(0);
+  const [page, setPage] = useState(1);
+  const limit = 5;
+
+  const location = useLocation();
+  const searchQuery = new URLSearchParams(location.search).get("query");
 
   useEffect(() => {
     const loadPosts = async () => {
       setLoading(true);
       try {
-        const data = await fetchPosts({ search, limit, page });
-        console.log("Data received:", data);
+        const data = await fetchPosts({ search: searchQuery, limit, page });
         if (data && data.payload && data.payload.posts) {
           setPosts(data.payload.posts);
-          setTotalPosts(data.payload.pagination.totalpages * limit); // Update totalPosts
+          setTotalPosts(data.payload.pagination.totalpages * limit);
           setError("");
         } else {
-          console.error("Unexpected data structure:", data);
-          setError("Failed to fetch posts.");
+          setError("No results found.");
         }
-      } catch (error) {
-        console.error("Failed to load posts:", error);
-        setError("An error occurred while fetching posts.");
+      } catch (err) {
+        setError(err.response.data.message || "Failed to fetch posts.");
       } finally {
         setLoading(false);
       }
     };
 
     loadPosts();
-  }, [search, page]);
-
-  const addPost = (newPost) => {
-    setPosts((prevPosts) => [newPost, ...prevPosts]); // Add the new post to the top of the list
-  };
+  }, [searchQuery, page]);
 
   return (
     <div>
-      <PageTitle title="Home Page" />
+      <PageTitle title="Search Results" />
       <div className="main-content">
-        <Sidebar />
         <div className="post-section">
-          <CreatePost addPost={addPost} />
-
           {loading ? (
             <p>Loading...</p>
           ) : error ? (
@@ -66,7 +56,7 @@ const Home = () => {
               setPage={setPage}
               pagination={{
                 currentPage: page,
-                totalPages: Math.ceil(totalPosts / limit), // Use updated totalPosts
+                totalPages: Math.ceil(totalPosts / limit),
                 previousPage: page > 1 ? page - 1 : null,
                 nextPage:
                   page + 1 <= Math.ceil(totalPosts / limit) ? page + 1 : null,
@@ -79,4 +69,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default SearchResults;

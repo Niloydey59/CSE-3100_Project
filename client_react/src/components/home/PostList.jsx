@@ -4,27 +4,7 @@ import PostItem from "./PostCard";
 import { fetchPosts } from "../../FetchApi/index";
 import "../../styling/home/postList.css";
 
-const PostList = () => {
-  const [posts, setPosts] = useState([]);
-
-  useEffect(() => {
-    const loadPosts = async () => {
-      try {
-        const data = await fetchPosts();
-        console.log("Data received:", data);
-        if (data && data.payload && data.payload.posts) {
-          setPosts(data.payload.posts);
-        } else {
-          console.error("Unexpected data structure:", data);
-        }
-      } catch (error) {
-        console.error("Failed to load posts:", error);
-      }
-    };
-
-    loadPosts();
-  }, []);
-
+const PostList = ({ posts, setPosts, setPage, pagination }) => {
   const updatePost = (updatedPost) => {
     setPosts((prevPosts) =>
       prevPosts.map((post) =>
@@ -33,11 +13,49 @@ const PostList = () => {
     );
   };
 
+  const handlePreviousPage = () => {
+    if (pagination.currentPage > 1) {
+      setPage((prevPage) => prevPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (pagination.nextPage) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  };
+
   return (
     <div className="post-list">
-      {posts.map((post) => (
-        <PostItem key={post._id} post={post} updatePost={updatePost} />
-      ))}
+      {/* Render the list of posts */}
+      {posts.length > 0 ? (
+        posts.map((post) => (
+          <PostItem key={post._id} post={post} updatePost={updatePost} />
+        ))
+      ) : (
+        <p>No posts found.</p>
+      )}
+
+      {/* Pagination Controls */}
+      <div className="pagination-controls">
+        <button
+          onClick={handlePreviousPage}
+          disabled={!pagination.previousPage}
+          className="pagination-button"
+        >
+          Previous
+        </button>
+        <span className="pagination-info">
+          Page {pagination.currentPage} of {pagination.totalPages}
+        </span>
+        <button
+          onClick={handleNextPage}
+          disabled={!pagination.nextPage}
+          className="pagination-button"
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 };

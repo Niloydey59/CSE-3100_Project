@@ -5,6 +5,7 @@ const Post = require("../models/postModel");
 const User = require("../models/userModel");
 const { findWithId } = require("../services/finditem");
 const cloudinary = require("../config/cloudinary");
+const { publicIDfromURL } = require("../helper/cloudinaryHelper");
 
 const createPost = async (req, res, next) => {
   try {
@@ -169,6 +170,48 @@ const updatePostById = async (req, res, next) => {
   }
 };
 
+const deletePostById = async (req, res, next) => {
+  try {
+    // Get product by id
+    const { id } = req.params;
+
+    // Find product from database by id
+    const postExists = await Post.findById(id);
+
+    // Check if product exists
+    if (!postExists) {
+      throw createError(404, "Product not found!");
+    }
+
+    // Delete product images from Cloudinary
+    if (postExists.image.length > 0) {
+      for (const image of postExists.image) {
+        const publicID = await publicIDfromURL(image);
+        const { result } = await cloudinary.uploader.destroy(
+          `StackRuet/posts/${publicID}`
+        );
+        if (result !== "ok") {
+          throw createError(
+            500,
+            "Failed to delete product image from Cloudinary"
+          );
+        }
+      }
+    }
+
+    // Delete product from database by id
+    const post = await Post.findByIdAndDelete(id);
+
+    return successResponse(res, {
+      statusCode: 200,
+      message: "Product deleted successfully!",
+      payload: { post },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const likePostById = async (req, res, next) => {
   try {
     //get post id from request params
@@ -253,11 +296,48 @@ const dislikePostById = async (req, res, next) => {
   }
 };
 
+const getPostsByUserId = async (req, res, next) => {
+  try {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 5;
+
+    const user = req.user;
+    const options = {};
+    const posts = await Post.find({ author: user._id }, options)
+      .populate("author", "username")
+      .sort({ createdAt: -1 })
+      .limit(limit)
+      .skip(limit * (page - 1))
+      .lean();
+
+    //count total posts
+    const count = await Post.find({ author: user._id }).countDocuments();
+
+    return successResponse(res, {
+      statusCode: 200,
+      message: "Posts were returned succesfully!",
+      payload: {
+        posts,
+        pagination: {
+          totalpages: Math.ceil(count / limit),
+          currentPage: page,
+          previousPage: page > 1 ? page - 1 : null,
+          nextPage: page + 1 <= Math.ceil(count / limit) ? page + 1 : null,
+        },
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createPost,
   getPosts,
   getPostById,
   updatePostById,
+  deletePostById,
   likePostById,
   dislikePostById,
+  getPostsByUserId,
 };

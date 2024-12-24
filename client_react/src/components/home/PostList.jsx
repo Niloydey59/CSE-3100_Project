@@ -4,7 +4,14 @@ import PostItem from "./PostCard";
 import { fetchPosts } from "../../FetchApi/index";
 import "../../styling/home/postList.css";
 
-const PostList = ({ posts, setPosts, setPage, pagination }) => {
+const PostList = ({
+  posts,
+  setPosts,
+  setPage,
+  pagination,
+  showActions,
+  onAction,
+}) => {
   const updatePost = (updatedPost) => {
     setPosts((prevPosts) =>
       prevPosts.map((post) =>
@@ -30,7 +37,13 @@ const PostList = ({ posts, setPosts, setPage, pagination }) => {
       {/* Render the list of posts */}
       {posts.length > 0 ? (
         posts.map((post) => (
-          <PostItem key={post._id} post={post} updatePost={updatePost} />
+          <PostItem
+            key={post._id}
+            post={post}
+            updatePost={updatePost}
+            showActions={showActions}
+            onAction={onAction}
+          />
         ))
       ) : (
         <p>No posts found.</p>

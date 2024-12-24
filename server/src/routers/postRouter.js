@@ -8,6 +8,8 @@ const {
   likePostById,
   dislikePostById,
   createPost,
+  getPostsByUserId,
+  deletePostById,
 } = require("../controllers/postController");
 const { isLoggedIn } = require("../middlewares/auth");
 
@@ -26,9 +28,13 @@ postRouter.post(
 
 postRouter.get("/", getPosts); // Get all posts
 
+postRouter.get("/user", isLoggedIn, getPostsByUserId); // Get posts by user ID
+
 postRouter.get("/:id", getPostById); // Get post by ID
 
 postRouter.put("/:id", isLoggedIn, updatePostById); // Update post by ID
+
+postRouter.delete("/:id", isLoggedIn, deletePostById); // Delete post by ID
 
 postRouter.post("/like/:id", isLoggedIn, likePostById); // Like post by ID
 

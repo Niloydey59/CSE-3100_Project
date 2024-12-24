@@ -1,16 +1,22 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../../context/authcontext"; // To get currentUser
-import { createPost } from "../../FetchApi"; // API call to create a post
-import "../../styling/home/createPost.css"; // Styling for the component
+
+import { useAuth } from "../../context/authcontext";
+import { createPost } from "../../FetchApi";
+
+// Styling
+import "../../styling/home/createPost.css";
 
 const CreatePost = ({ addPost }) => {
   const { currentUser } = useAuth(); // Get current user from auth context
+
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [tags, setTags] = useState("");
   const [images, setImages] = useState([]);
-  const [error, setError] = useState("");
+
+  const [error, setError] = useState(""); // Error message state
+
   const [showPopup, setShowPopup] = useState(false); // Popup visibility state
 
   // Handle image selection
@@ -44,6 +50,7 @@ const CreatePost = ({ addPost }) => {
       images.forEach((image) => formData.append("image", image)); // Append each image
 
       const data = await createPost(formData); // API call
+
       if (data.success) {
         console.log("Post created:", data.payload);
         addPost(data.payload); // Add the new post to the PostList
@@ -56,7 +63,7 @@ const CreatePost = ({ addPost }) => {
         setError("Failed to create a post.");
       }
     } catch (err) {
-      console.error("Error creating post:", err);
+      console.error(err.message);
       setError(err.message);
     }
   };
@@ -70,8 +77,10 @@ const CreatePost = ({ addPost }) => {
     <div className="create-post">
       <h2>Create a Post</h2>
 
+      {/* Error messege */}
       {error && <p className="error">{error}</p>}
 
+      {/* Create Post Form */}
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -109,10 +118,12 @@ const CreatePost = ({ addPost }) => {
           <div className="popup">
             <h2>You need to log in</h2>
             <p>Login to Create posts.</p>
+
             <div className="popup-actions">
               <Link to="/login" className="popup-button">
                 Login Now
               </Link>
+
               <button className="popup-button close" onClick={closePopup}>
                 Maybe Later
               </button>

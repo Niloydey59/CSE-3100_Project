@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     setCurrentUser(null);
     await signOutUser(); // Call the logout API
-    navigate("/");
+    window.location.href = "/";
   };
 
   return (

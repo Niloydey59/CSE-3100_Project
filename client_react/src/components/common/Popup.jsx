@@ -1,7 +1,9 @@
 // src/components/common/Popup.jsx
 import React from "react";
 import { Link } from "react-router-dom";
-import "../../styling/popup.css"; // Style the popup component
+
+//css imports
+import "../../styling/popup.css";
 
 const Popup = ({ isVisible, title, message, onClose }) => {
   if (!isVisible) return null;
@@ -11,10 +13,12 @@ const Popup = ({ isVisible, title, message, onClose }) => {
       <div className="popup">
         <h2>{title}</h2>
         <p>{message}</p>
+
         <div className="popup-actions">
           <Link to="/login" className="popup-button">
             Login Now
           </Link>
+
           <button className="popup-button close" onClick={onClose}>
             Maybe Later
           </button>

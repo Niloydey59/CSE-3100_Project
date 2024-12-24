@@ -200,7 +200,8 @@ const sendActivationEmail = async (req, res, next) => {
 const activateUserAccount = async (req, res, next) => {
   try {
     //get token from request body
-    const token = req.body.token;
+    const { token } = req.body;
+    console.log("Token: ", token);
 
     //check if token exists
     if (!token) {

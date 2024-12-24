@@ -10,6 +10,8 @@ import PostDetails from "../pages/postDetails";
 import GroupDetailsPage from "../pages/groupDetails";
 import Dashboard from "../pages/Dashboard";
 import SearchResults from "../pages/SearchResults";
+import ActivateAccount from "../pages/ActivateAcount";
+import UpdatePost from "../pages/UpdatePost";
 
 const AppRoutes = () => {
   return (
@@ -17,6 +19,8 @@ const AppRoutes = () => {
       <Route path="/" element={<Home />} />
       <Route path="/search" element={<SearchResults />} />
       <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/api/users/verify/:token" element={<ActivateAccount />} />
+      <Route path="/post/update/:id" element={<UpdatePost />} />
       <Route path="/post/:postId" element={<PostDetails />} />
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />

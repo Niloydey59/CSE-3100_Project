@@ -1,0 +1,10 @@
+.dashboard-container {
+    display: flex;
+  }
+  
+  .dashboard-content {
+    color: azure;
+    width: 80%;
+    padding: 1rem;
+  }
+  

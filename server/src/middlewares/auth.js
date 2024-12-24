@@ -6,7 +6,7 @@ const { refreshTokenHandler } = require("../services/finditem");
 
 const isLoggedIn = async (req, res, next) => {
   try {
-    console.log("Cookies: ", req.cookies);
+    //console.log("Cookies: ", req.cookies);
     const accessToken = req.cookies.access_token;
     const refreshToken = req.cookies.refresh_token;
     if (!accessToken && !refreshToken) {
@@ -16,7 +16,7 @@ const isLoggedIn = async (req, res, next) => {
       console.log("Calling refreshTokenHandler");
 
       const newAccessToken = await refreshTokenHandler(refreshToken);
-      console.log("New Access Token: ", newAccessToken);
+      //console.log("New Access Token: ", newAccessToken);
       res.cookie("access_token", newAccessToken, {
         maxAge: 15 * 60 * 1000, // 15 minutes
         httpOnly: true,
@@ -28,7 +28,7 @@ const isLoggedIn = async (req, res, next) => {
       next();
     } else {
       const decoded = jwt.verify(accessToken, jwtAccessKey);
-      console.log("Decoded: ", decoded);
+      //console.log("Decoded: ", decoded);
       req.user = decoded.user;
       return next();
     }

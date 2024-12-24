@@ -1,14 +1,17 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import { signInUser } from "../../FetchApi";
 import { useAuth } from "../../context/authcontext";
 
 const SignInForm = () => {
   const { login } = useAuth();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
   const [generalError, setGeneralError] = useState("");
+
   const navigate = useNavigate();
 
   const validate = () => {
@@ -46,7 +49,7 @@ const SignInForm = () => {
       console.log("User signed in successfully:", data);
       navigate("/");
     } catch (error) {
-      console.error("Error signing in user:", error);
+      console.error(error.message);
       if (
         error.response &&
         error.response.data &&

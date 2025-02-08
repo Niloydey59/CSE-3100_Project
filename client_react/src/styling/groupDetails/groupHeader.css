@@ -1,0 +1,78 @@
+.group-header-section {
+  background-color: #2C333A;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.group-header-details h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.group-header-details p {
+  font-size: 1.2rem;
+  color: #b8b8b8;
+}
+
+.btn-join-group {
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-right: 10px; /* Add margin to separate buttons */
+}
+
+.btn-join-group:hover {
+  background-color: #218838;
+}
+
+.btn-leave-group {
+  background-color: #dc3545; /* Red background for leave */
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-right: 10px; /* Add margin to separate buttons */
+}
+
+.btn-leave-group:hover {
+  background-color: #c82333; /* Darker red on hover */
+}
+
+.btn-manage-group {
+  background-color: #007bff; /* Blue background for manage */
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-right: 10px; /* Add margin to separate buttons */
+}
+
+.btn-manage-group:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+.btn-add-post {
+  background-color: #17a2b8; /* Teal background for add post */
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px; /* Add margin to separate buttons */
+  margin-right: 10px; /* Add margin to separate buttons */
+}
+
+.btn-add-post:hover {
+  background-color: #138496; /* Darker teal on hover */
+}

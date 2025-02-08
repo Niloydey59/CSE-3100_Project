@@ -116,7 +116,10 @@ const PostItem = ({ post, updatePost, showActions, onAction }) => {
             <i className="fa-solid fa-thumbs-down">{post.dislikes.length}</i>
           </div>
         </span>
-        <span>{post.comments.length} Comments</span>
+        <span>
+          <i class="fa-regular fa-comment"></i>
+          {post.comments.length}
+        </span>
       </div>
 
       {/* {Popup Menu}  */}

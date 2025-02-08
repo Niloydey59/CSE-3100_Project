@@ -3,6 +3,7 @@ import api from "./base";
 // Create a new post API call
 export const createPost = async (postData) => {
   try {
+    console.log("id:", postData.get("groupId"));
     const response = await api.post("/posts", postData, {
       headers: {
         "Content-Type": "multipart/form-data",
@@ -19,6 +20,7 @@ export const createPost = async (postData) => {
 // post api call
 export const fetchPosts = async ({ search = "", limit = 5, page = 1 }) => {
   try {
+    console.log("Search:", search);
     const response = await api.get("/posts", {
       params: { search, limit, page },
     });

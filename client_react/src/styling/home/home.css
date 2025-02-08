@@ -19,13 +19,59 @@
   overflow-y: auto; /* Scroll if content exceeds height */
 }
 
+
+/* Post Section */
 .post-section {
-  flex: 1; /* Take the remaining space after the sidebar */
-  background-color: #262D34; /* Background for the post section */
-  padding: 20px; /* Add spacing */
-  box-sizing: border-box; /* Include padding in dimensions */
-  overflow-y: auto; /* Scroll if posts exceed height */
+  margin-top: 20px;
+  margin-left: 10px;
+  padding: 10px;
+  background-color: #1E252B;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  flex: 1; /* Take up remaining space */
 }
+
+/* Add Post Banner */
+.add-post-banner {
+  width: 80%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #2C333A;
+  padding: 20px;
+  margin-bottom: 20px;
+  margin-left: 8%;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Button Styling */
+.btn-create-post {
+  padding: 10px 20px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+  background-color: #1e90ff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Button Hover Effect */
+.btn-create-post:hover {
+  background-color: #187bcd;
+  transform: scale(1.05);
+}
+
+/* Button Active Effect */
+.btn-create-post:active {
+  background-color: #145a96;
+  transform: scale(1);
+}
+
 
 .post-list {
   display: flex;

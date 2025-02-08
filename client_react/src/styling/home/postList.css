@@ -3,12 +3,14 @@
     flex-grow: 1;
     padding: 15px;
   }
+  
 /* Pagination  */
   .pagination-controls {
     display: flex;
     justify-content: center;
     align-items: center;
     margin-top: 20px;
+    grid-column: 1/-1;
   }
   
   .pagination-button {

@@ -1,16 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
-
-import "../styling/home/home.css";
-
+import { useNavigate } from "react-router-dom";
+// Context
+import { useAuth } from "../context/authcontext";
+// components
 import PageTitle from "../components/common/PageTitle";
 import Sidebar from "../components/home/Sidebar";
 import PostList from "../components/home/PostList";
 import CreatePost from "../components/home/CreatePost";
+import Popup from "../components/common/Popup";
+// API
 import { fetchPosts } from "../FetchApi";
+// styling
+import "../styling/home/home.css";
 
 const Home = () => {
+  const navigate = useNavigate();
+
+  const { currentUser } = useAuth();
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
+
   const [posts, setPosts] = useState([]);
+
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -33,8 +44,8 @@ const Home = () => {
           setError("Failed to fetch posts.");
         }
       } catch (error) {
-        console.error("Failed to load posts:", error);
-        setError("An error occurred while fetching posts.");
+        console.error("Failed to load posts:", error.message);
+        setError("An error occurred while fetching posts.", error.message);
       } finally {
         setLoading(false);
       }
@@ -43,8 +54,18 @@ const Home = () => {
     loadPosts();
   }, [search, page]);
 
-  const addPost = (newPost) => {
-    setPosts((prevPosts) => [newPost, ...prevPosts]); // Add the new post to the top of the list
+  const handleAddPost = () => {
+    if (!currentUser) {
+      setShowLoginPopup(true);
+      return;
+    }
+    console.log("Adding post...");
+    navigate(`/add-post`);
+    // Add logic to show the add post form
+  };
+
+  const closePopup = () => {
+    setShowLoginPopup(false);
   };
 
   return (
@@ -53,7 +74,11 @@ const Home = () => {
       <div className="main-content">
         <Sidebar />
         <div className="post-section">
-          <CreatePost addPost={addPost} />
+          <div className="add-post-banner">
+            <button className="btn-create-post" onClick={handleAddPost}>
+              Add Post
+            </button>
+          </div>
 
           {loading ? (
             <p>Loading...</p>
@@ -75,6 +100,12 @@ const Home = () => {
           )}
         </div>
       </div>
+      <Popup
+        isVisible={showLoginPopup}
+        title="You need to log in"
+        message="Login to add a post."
+        onClose={closePopup}
+      />
     </div>
   );
 };

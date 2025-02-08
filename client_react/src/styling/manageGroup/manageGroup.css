@@ -1,0 +1,49 @@
+.manage-group-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #1E252B;
+    color: #eaeaea;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .manage-group-page h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: #fff;
+  }
+  
+  .manage-group-tabs {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+  }
+  
+  .manage-group-tab {
+    padding: 10px 15px;
+    background-color: #2C333A;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #b8b8b8;
+    font-size: 1rem;
+  }
+  
+  .manage-group-tab.active-tab {
+    background-color: #007bff;
+    color: #fff;
+    font-weight: bold;
+  }
+  
+  .manage-group-tab:hover {
+    background-color: #0056b3;
+    color: #fff;
+  }
+  
+  .manage-group-content {
+    background-color: #2C333A;
+    padding: 20px;
+    border-radius: 8px;
+  }
+  

@@ -1,46 +1,40 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet";
-import { fetchGroupDetails } from "../FetchApi"; // Ensure the correct import path
 
+// Api
+import { fetchGroupDetails } from "../FetchApi";
+// Components
 import GroupHeader from "../components/GroupDetails/GroupHeader";
 import GroupPosts from "../components/GroupDetails/GroupPosts";
-import GroupActions from "../components/GroupDetails/GroupActions";
-import "../styling/groups/groupDetails.css";
+import GroupSidebar from "../components/GroupDetails/GroupSidebar";
+import GroupAddPost from "../components/GroupDetails/GroupAddPost";
+// Styling
+import "../styling/groupDetails/groupDetails.css";
 
 const GroupDetailsPage = () => {
-  const { groupId } = useParams(); // Get group ID from the URL
+  const { groupId } = useParams();
   const [group, setGroup] = useState(null);
   const [error, setError] = useState(null);
 
-  // Fetch group details from the backend
   useEffect(() => {
-    const fetchDetails = async () => {
+    const fetchGroup = async () => {
       try {
-        console.log("Fetching group details for ID:", groupId);
         const data = await fetchGroupDetails(groupId);
-        console.log("Data received:", data);
-        if (data && data.payload && data.payload.group) {
-          setGroup(data.payload.group);
-          console.log("Group details loaded:", data.payload.group);
-        } else {
-          setError("Failed to fetch group details");
-        }
-      } catch (error) {
-        setError("Error fetching group details");
-        console.error("Error fetching group details:", error);
+        setGroup(data.payload.group);
+      } catch (err) {
+        setError(err.message);
       }
     };
-
-    fetchDetails();
-  }, [groupId]);
+    fetchGroup();
+  }, [group]);
 
   if (error) {
-    return <div className="group-details-error">{error}</div>;
+    return <div className="group-details-page-error">{error}</div>;
   }
 
   if (!group) {
-    return <div className="group-details-error">Group not found.</div>;
+    return <div className="group-details-page-loading">Loading...</div>;
   }
 
   return (
@@ -48,9 +42,13 @@ const GroupDetailsPage = () => {
       <Helmet>
         <title>{group.name} - Group Details</title>
       </Helmet>
-      <GroupHeader name={group.name} description={group.description} />
-      <GroupActions isAdmin={group.isAdmin} />
-      <GroupPosts posts={group.posts} />
+      <GroupHeader group={group} />
+      <div className="group-details-content">
+        <div className="group-details-main-content">
+          <GroupPosts />
+        </div>
+        <GroupSidebar members={group.members} />
+      </div>
     </div>
   );
 };

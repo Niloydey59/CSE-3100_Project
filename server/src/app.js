@@ -13,6 +13,7 @@ const { errorResponse } = require("./controllers/responseController");
 const authRouter = require("./routers/authRouter");
 const postRouter = require("./routers/postRouter");
 const groupRouter = require("./routers/groupRouter");
+const commentRouter = require("./routers/commentRouter");
 
 const app = express();
 
@@ -40,14 +41,19 @@ app.use(
   cors({
     origin: "http://localhost:5173", // Replace with your frontend URL
     credentials: true, // Enable cookies to be sent across domains
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allowed HTTP methods
+    allowedHeaders: ["Content-Type", "Authorization"], // Headers allowed in requests
   })
 );
+
+app.options("*", cors()); // Enable CORS for all preflight requests
 
 app.use("/api/seed", seedRouter);
 app.use("/api/users", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/posts", postRouter);
 app.use("/api/groups", groupRouter);
+app.use("/api/comments", commentRouter);
 
 app.get("/", (req, res) => {
   res.status(200).send({

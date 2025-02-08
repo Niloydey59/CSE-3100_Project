@@ -1,0 +1,23 @@
+.group-details-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  color: #eaeaea;
+  background-color: #1E252B;
+}
+
+.group-details-content {
+  display: flex;
+  gap: 20px;
+}
+
+.group-details-main-content {
+  flex: 3;
+}
+
+.group-details-sidebar {
+  flex: 1;
+  background-color: #2C333A;
+  padding: 15px;
+  border-radius: 8px;
+}

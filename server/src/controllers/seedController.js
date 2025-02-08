@@ -2,6 +2,7 @@ const data = require("../data");
 const Post = require("../models/postModel");
 const User = require("../models/userModel");
 const Group = require("../models/groupModel");
+
 const seedUsers = async (req, res, next) => {
   try {
     // Delete all users
@@ -64,7 +65,11 @@ const seedGroups = async (req, res, next) => {
 
       // Replace the members' usernames with their IDs
       const members = [];
-      members.push(admin._id);
+      members.push({
+        user: admin._id,
+        joinedAt: new Date(),
+        role: "admin",
+      });
       group.members = members;
     }
 
@@ -78,4 +83,31 @@ const seedGroups = async (req, res, next) => {
   }
 };
 
-module.exports = { seedUsers, seedPosts, seedGroups };
+const seedGroupPosts = async (req, res, next) => {
+  try {
+    // Delete all posts with groupId=676e3877314a944f2037a26c
+    await Post.deleteMany({ groupId: "676e3877314a944f2037a26c" });
+
+    const posts = data.groupPosts;
+    for (let post of posts) {
+      // Find the author of the post
+      const author = await User.findOne({ username: post.username });
+
+      // If the author is not found, set the post to null
+      if (!author) {
+        post = null;
+        continue;
+      }
+      // Replace the username with the author's ID
+      post.author = author._id;
+    }
+    // Create new posts
+    await Post.insertMany(posts);
+    // Success response
+    return res.status(201).json(posts);
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { seedUsers, seedPosts, seedGroups, seedGroupPosts };

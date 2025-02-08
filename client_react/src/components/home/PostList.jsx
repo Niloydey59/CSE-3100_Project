@@ -12,6 +12,10 @@ const PostList = ({
   showActions,
   onAction,
 }) => {
+  console.log("No of posts:", posts.length);
+  const showPagination = posts.length > 0;
+  console.log("Show Pagination:", showPagination);
+
   const updatePost = (updatedPost) => {
     setPosts((prevPosts) =>
       prevPosts.map((post) =>
@@ -50,25 +54,27 @@ const PostList = ({
       )}
 
       {/* Pagination Controls */}
-      <div className="pagination-controls">
-        <button
-          onClick={handlePreviousPage}
-          disabled={!pagination.previousPage}
-          className="pagination-button"
-        >
-          Previous
-        </button>
-        <span className="pagination-info">
-          Page {pagination.currentPage} of {pagination.totalPages}
-        </span>
-        <button
-          onClick={handleNextPage}
-          disabled={!pagination.nextPage}
-          className="pagination-button"
-        >
-          Next
-        </button>
-      </div>
+      {showPagination && (
+        <div className="pagination-controls">
+          <button
+            onClick={handlePreviousPage}
+            disabled={!pagination.previousPage}
+            className="pagination-button"
+          >
+            Previous
+          </button>
+          <span className="pagination-info">
+            Page {pagination.currentPage} of {pagination.totalPages}
+          </span>
+          <button
+            onClick={handleNextPage}
+            disabled={!pagination.nextPage}
+            className="pagination-button"
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 };

@@ -40,6 +40,7 @@ const postSchema = new Schema(
     groupId: {
       type: Schema.Types.ObjectId,
       ref: "Groups",
+      default: null,
     },
 
     likes: [

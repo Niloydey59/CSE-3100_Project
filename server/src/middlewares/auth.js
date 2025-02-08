@@ -6,6 +6,7 @@ const { refreshTokenHandler } = require("../services/finditem");
 
 const isLoggedIn = async (req, res, next) => {
   try {
+    console.log("In isLoggedIn Middleware");
     //console.log("Cookies: ", req.cookies);
     const accessToken = req.cookies.access_token;
     const refreshToken = req.cookies.refresh_token;

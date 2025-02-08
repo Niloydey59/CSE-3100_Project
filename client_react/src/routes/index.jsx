@@ -12,20 +12,39 @@ import Dashboard from "../pages/Dashboard";
 import SearchResults from "../pages/SearchResults";
 import ActivateAccount from "../pages/ActivateAcount";
 import UpdatePost from "../pages/UpdatePost";
+import CreateGroup from "../pages/CreateGroup";
+import AddPostPage from "../pages/AddPost";
+import ManageGroupPage from "../pages/ManageGroup";
 
 const AppRoutes = () => {
   return (
     <Routes>
+      {/* Login & Register */}
+      <Route path="/register" element={<Register />} />
+      <Route path="/login" element={<Login />} />
+
+      {/* Home  */}
       <Route path="/" element={<Home />} />
+      <Route path="/add-post" element={<AddPostPage />} />
       <Route path="/search" element={<SearchResults />} />
+
+      {/* User Dashboard */}
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/api/users/verify/:token" element={<ActivateAccount />} />
       <Route path="/post/update/:id" element={<UpdatePost />} />
+
+      {/* Posts */}
       <Route path="/post/:postId" element={<PostDetails />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/login" element={<Login />} />
+
+      {/* Groups */}
       <Route path="/groups" element={<Groups />} />
+      <Route path="/create-group" element={<CreateGroup />} />
+      {/* Group Details */}
       <Route path="/groups/:groupId" element={<GroupDetailsPage />} />
+      <Route path="/groups/:groupId/manage" element={<ManageGroupPage />} />
+      <Route path="/groups/:groupId/add-post" element={<AddPostPage />} />
+      <Route path="/groups/:groupId/post/:postId" element={<PostDetails />} />
+      {/* Error */}
       <Route path="*" element={<Error />} />
     </Routes>
   );

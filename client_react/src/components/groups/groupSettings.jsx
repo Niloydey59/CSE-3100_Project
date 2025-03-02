@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
+
+// API
 import { updateGroup } from "../../FetchApi";
 
 const GroupSettings = ({ groupId }) => {
+  //States
   const [groupName, setGroupName] = useState("");
   const [groupDescription, setGroupDescription] = useState("");
 

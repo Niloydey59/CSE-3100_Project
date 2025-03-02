@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import { deletePostById, fetchPosts, fetchUserPosts } from "../../FetchApi";
 // Components
-import PostList from "../home/PostList";
+import PostList from "../posts/PostList";
 // Styling
 import "../../styling/dashboard/userPosts.css";
-import { useNavigate } from "react-router-dom";
+// API
+import { deletePostById, fetchUserPosts } from "../../FetchApi";
 
 const UserPosts = () => {
   const navigate = useNavigate();

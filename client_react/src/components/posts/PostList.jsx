@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 
+// components
 import PostItem from "./PostCard";
+// api
 import { fetchPosts } from "../../FetchApi/index";
-import "../../styling/home/postList.css";
+// styling
+import "../../styling/posts/postList.css";
 
 const PostList = ({
   posts,
@@ -12,9 +15,9 @@ const PostList = ({
   showActions,
   onAction,
 }) => {
-  console.log("No of posts:", posts.length);
+  //console.log("No of posts:", posts.length);
   const showPagination = posts.length > 0;
-  console.log("Show Pagination:", showPagination);
+  //console.log("Show Pagination:", showPagination);
 
   const updatePost = (updatedPost) => {
     setPosts((prevPosts) =>
@@ -41,6 +44,7 @@ const PostList = ({
       {/* Render the list of posts */}
       {posts.length > 0 ? (
         posts.map((post) => (
+          /* Post Card */
           <PostItem
             key={post._id}
             post={post}

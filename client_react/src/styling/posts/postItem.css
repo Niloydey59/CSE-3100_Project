@@ -1,64 +1,77 @@
 /* src/styling/postItem.css */
 
 .post-item {
+  background-color: #2F363D;
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  transition: all 0.3s ease;
+  color: #FFFFFF;
   position: relative;
-  background-color: #262D34;
-  margin-bottom: 15px;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .post-item:hover {
-  background-color: #3b444e;
-  transform: translateY(-3px);
+  transform: translateY(-4px);
+  background-color: #3B444E;
+  
 }
 
 .post-title {
   text-decoration: none;
-  color: #fff;
+  display: block;
+  padding: 0.5rem 0;
 }
 
 .post-title h2 {
-  font-size: 20px;
-  margin-bottom: 10px;
+  font-size: 1.5rem;
+  font-weight: 600;
   color: #fff;
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
 }
 
 .post-title p {
-  font-size: 16px;
-  color: #ccc;
+  color: #94a3b8;
+  line-height: 1.6;
+  margin-bottom: 1rem;
 }
 
 .post-tags {
-  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0;
 }
 
 .tag {
-  display: inline-block;
-  background-color: #444c56;
-  padding: 5px 10px;
-  border-radius: 15px;
-  font-size: 14px;
-  margin-right: 5px;
-  color: #ddd;
+  background: rgba(59, 130, 246, 0.1);
+  color: #60a5fa;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.tag:hover {
+  background: rgba(59, 130, 246, 0.2);
 }
 
 .post-stats {
-  margin-top: 15px;
-  font-size: 14px;
-  color: #aaa;
+  color: #94a3b8;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 .post-actions {
   display: flex;
-  justify-content: space-around;
   align-items: center;
-  background-color: #1e252c;
-  border-radius: 8px;
-  padding: 10px;
-  margin-top: 15px;
+  gap: 2rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Like and Dislike buttons */
@@ -69,9 +82,12 @@
   justify-content: space-between;
 }
 
-.like-iconliked,
+.like-iconliked {
+  color: #3b82f6;
+}
+
 .like-icondisliked {
-  color: #007bff; /* Blue color when liked/disliked */
+  color: #ef4444;
 }
 
 .like-iconliked:hover,
@@ -83,14 +99,16 @@
 .action-button {
   display: flex;
   align-items: center;
-  gap: 5px;
-  cursor: pointer;
-  color: #999;
-  transition: color 0.2s ease;
+  gap: 0.5rem;
+  color: #94a3b8;
+  transition: all 0.2s ease;
+  padding: 0.5rem;
+  border-radius: 8px;
 }
 
 .action-button:hover {
-  color: #f39c12; /* Yellow color on hover */
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
 }
 
 .action-button i {
@@ -187,29 +205,24 @@
   color: #fff;
 }
 
+/* Enhance dropdown menu styling */
 .dropdown-menu {
-  position: absolute;
-  top: 1.5rem;
-  right: 0;
-  background-color: #333;
-  color: #fff;
-  border: 1px solid #444;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-  z-index: 10;
+  background: #2c353d;
+  border-radius: 8px;
+  padding: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .dropdown-menu button {
-  background: none;
-  border: none;
-  color: inherit;
-  padding: 0.5rem 1rem;
-  text-align: left;
-  cursor: pointer;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
   width: 100%;
+  text-align: left;
+  transition: all 0.2s ease;
 }
 
 .dropdown-menu button:hover {
-  background-color: #555;
+  background: rgba(255, 255, 255, 0.1);
 }
 

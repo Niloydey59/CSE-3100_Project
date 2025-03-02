@@ -3,14 +3,13 @@ import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet";
 
 // Api
-import { fetchGroupDetails } from "../FetchApi";
+import { fetchGroupDetails } from "../../FetchApi";
 // Components
-import GroupHeader from "../components/GroupDetails/GroupHeader";
-import GroupPosts from "../components/GroupDetails/GroupPosts";
-import GroupSidebar from "../components/GroupDetails/GroupSidebar";
-import GroupAddPost from "../components/GroupDetails/GroupAddPost";
+import GroupHeader from "../../components/groups/GroupHeader";
+import GroupPosts from "../../components/groups/GroupPosts";
+import GroupSidebar from "../../components/groups/GroupSidebar";
 // Styling
-import "../styling/groupDetails/groupDetails.css";
+import "../../styling/groups/groupDetails.css";
 
 const GroupDetailsPage = () => {
   const { groupId } = useParams();

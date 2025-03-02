@@ -1,8 +1,11 @@
-import React, { useState } from "react";
-import SignInForm from "../components/login/signInForm";
-import SignUpForm from "../components/login/signUpForm";
-import Overlay from "../components/login/overlay";
-import "../styling/login/login.css";
+import { useState } from "react";
+
+// Components
+import SignInForm from "../../components/login/signInForm";
+import SignUpForm from "../../components/login/signUpForm";
+import Overlay from "../../components/login/overlay";
+// Styling
+import "../../styling/forms/login.css";
 
 const LoginPage = () => {
   const [isSignUpActive, setIsSignUpActive] = useState(false);

@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../../styling/groupDetails/groupSidebar.css";
+
+// Styling
+import "../../styling/groups/groupSidebar.css";
 
 const GroupSidebar = ({ members }) => {
-  console.log("Group members:", members);
-  const [visibleMembers, setVisibleMembers] = useState(10); // Default number of members to show
   const navigate = useNavigate();
+  //console.log("Group members:", members);
+  //States
+  const [visibleMembers, setVisibleMembers] = useState(10); // Default number of members to show
 
   const getRoleIcon = (role) => {
     switch (role) {

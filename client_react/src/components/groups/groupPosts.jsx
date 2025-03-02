@@ -1,11 +1,16 @@
-import React, { useEffect, useState } from "react";
-import PostList from "../home/PostList";
-import "../../styling/groupDetails/groupPosts.css";
-import { fetchGroupPosts, fetchPosts } from "../../FetchApi";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+
+// Components
+import PostList from "../posts/PostList";
+// Styling
+import "../../styling/groups/groupPosts.css";
+// API
+import { fetchGroupPosts } from "../../FetchApi";
 
 const GroupPosts = () => {
   const { groupId } = useParams();
+  // States
   const [posts, setPosts] = useState([]);
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
@@ -45,13 +50,16 @@ const GroupPosts = () => {
     loadPosts();
   }, [search, page]);
 
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p className="error">{error}</p>;
+
   return (
     <div className="group-posts-list">
       <h2 className="group-posts-title">Posts</h2>
-      {loading ? (
-        <p>Loading...</p>
-      ) : error ? (
-        <p className="error">{error}</p>
+
+      {/* Posts section */}
+      {posts.length === 0 ? (
+        () => <p>No posts found.</p>
       ) : (
         <PostList
           posts={posts}

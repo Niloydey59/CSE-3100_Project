@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import { useAuth } from "../../context/authcontext";
 import { createPost } from "../../FetchApi";
@@ -9,8 +9,10 @@ import "../../styling/home/createPost.css";
 
 const CreatePost = ({ addPost }) => {
   const { currentUser } = useAuth(); // Get current user from auth context
+  const location = useLocation();
+  const initialTitle = location.state?.initialTitle || "";
 
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState(initialTitle);
   const [content, setContent] = useState("");
   const [tags, setTags] = useState("");
   const [images, setImages] = useState([]);

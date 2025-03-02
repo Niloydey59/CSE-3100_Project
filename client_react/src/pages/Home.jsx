@@ -6,9 +6,9 @@ import { useAuth } from "../context/authcontext";
 // components
 import PageTitle from "../components/common/PageTitle";
 import Sidebar from "../components/home/Sidebar";
-import PostList from "../components/home/PostList";
-import CreatePost from "../components/home/CreatePost";
+import PostList from "../components/posts/PostList";
 import Popup from "../components/common/Popup";
+import CreatePostBanner from "../components/home/CreatePostBanner";
 // API
 import { fetchPosts } from "../FetchApi";
 // styling
@@ -28,6 +28,7 @@ const Home = () => {
   const [error, setError] = useState("");
   const [totalPosts, setTotalPosts] = useState(0); // Add totalPosts state
   const limit = 5; // Posts per page
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     const loadPosts = async () => {
@@ -54,52 +55,39 @@ const Home = () => {
     loadPosts();
   }, [search, page]);
 
-  const handleAddPost = () => {
-    if (!currentUser) {
-      setShowLoginPopup(true);
-      return;
-    }
-    console.log("Adding post...");
-    navigate(`/add-post`);
-    // Add logic to show the add post form
-  };
-
   const closePopup = () => {
     setShowLoginPopup(false);
   };
 
+  // Loding state
+  if (loading) return <p>Loading...</p>;
+  // Error state
+  if (error) return <p className="error">{error}</p>;
+
   return (
     <div>
-      <PageTitle title="Home Page" />
+      <PageTitle title="Home" />
       <div className="main-content">
+        {/* Sidebar Section with mobile support */}
         <Sidebar />
-        <div className="post-section">
-          <div className="add-post-banner">
-            <button className="btn-create-post" onClick={handleAddPost}>
-              Add Post
-            </button>
-          </div>
 
-          {loading ? (
-            <p>Loading...</p>
-          ) : error ? (
-            <p className="error">{error}</p>
-          ) : (
-            <PostList
-              posts={posts}
-              setPosts={setPosts}
-              setPage={setPage}
-              pagination={{
-                currentPage: page,
-                totalPages: Math.ceil(totalPosts / limit), // Use updated totalPosts
-                previousPage: page > 1 ? page - 1 : null,
-                nextPage:
-                  page + 1 <= Math.ceil(totalPosts / limit) ? page + 1 : null,
-              }}
-            />
-          )}
+        <div className="post-section">
+          <CreatePostBanner />
+          <PostList
+            posts={posts}
+            setPosts={setPosts}
+            setPage={setPage}
+            pagination={{
+              currentPage: page,
+              totalPages: Math.ceil(totalPosts / limit),
+              previousPage: page > 1 ? page - 1 : null,
+              nextPage:
+                page + 1 <= Math.ceil(totalPosts / limit) ? page + 1 : null,
+            }}
+          />
         </div>
       </div>
+
       <Popup
         isVisible={showLoginPopup}
         title="You need to log in"

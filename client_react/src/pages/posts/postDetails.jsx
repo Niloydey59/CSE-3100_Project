@@ -1,14 +1,16 @@
 // src/pages/PostDetails.jsx
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Slider from "react-slick";
 
+// Context
+import { useAuth } from "../../context/authcontext";
+// Components
+import Comments from "../../components/posts/comments";
 // API
-import { dislikePost, fetchPostDetails, likePost } from "../FetchApi/index";
+import { dislikePost, fetchPostDetails, likePost } from "../../FetchApi/index";
 // Styling
-import "../styling/postDetails/PostDetails.css";
-import { useAuth } from "../context/authcontext";
-import Comments from "../components/postDetails/comments";
+import "../../styling/posts/postDetails.css";
 
 const PostDetails = () => {
   const { postId } = useParams(); // Extract post ID from the URL

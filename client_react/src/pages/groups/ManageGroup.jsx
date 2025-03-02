@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { Helmet } from "react-helmet";
-import "../styling/manageGroup/manageGroup.css";
 
 // Components
-import ManageMembers from "../components/ManageGroup/manageMembers";
-import ManagePosts from "../components/manageGroup/managePosts";
-import GroupSettings from "../components/ManageGroup/groupSettings";
+import ManageMembers from "../../components/groups/manageMembers";
+import ManagePosts from "../../components/groups/managePosts";
+import GroupSettings from "../../components/groups/groupSettings";
+// Styling
+import "../../styling/groups/manageGroup.css";
 
 const ManageGroupPage = ({ groupId }) => {
   const [activeTab, setActiveTab] = useState("members");

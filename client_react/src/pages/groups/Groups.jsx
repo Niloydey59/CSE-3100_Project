@@ -3,13 +3,13 @@ import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 
 // API
-import { fetchGroups } from "../FetchApi";
+import { fetchGroups } from "../../FetchApi";
 // Context
-import { useAuth } from "../context/authcontext";
+import { useAuth } from "../../context/authcontext";
 // Components
-import GroupList from "../components/groups/groupsList";
+import GroupList from "../../components/groups/groupsList";
 // Styling
-import "../styling/groups/groups.css";
+import "../../styling/groups/groups.css";
 
 const Groups = () => {
   const [groups, setGroups] = useState([]);

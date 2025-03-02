@@ -1,17 +1,19 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 // Context
 import { useAuth } from "../../context/authcontext";
 // Components
 import Popup from "../common/Popup";
 // Styling
-import "../../styling/groupDetails/groupHeader.css";
+import "../../styling/groups/groupHeader.css";
 // Api
 import { joinGroup, leaveGroup } from "../../FetchApi";
 
 const GroupHeader = ({ group }) => {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
+  //states
   const [showLoginPopup, setShowLoginPopup] = useState(false);
 
   const handleJoinGroup = async () => {
@@ -55,20 +57,25 @@ const GroupHeader = ({ group }) => {
     setShowLoginPopup(false);
   };
 
+  /* Check if user is a member of the group */
   const isMember =
     currentUser &&
     group.members.some((member) => member.user === currentUser._id);
+  /* Check if user is a admin of the group */
   const isAdmin = currentUser && group.admin === currentUser._id;
 
-  console.log("Is Member:", isMember);
-  console.log("Is Admin:", isAdmin);
+  /* console.log("Is Member:", isMember);
+  console.log("Is Admin:", isAdmin); */
 
   return (
     <div className="group-header-section">
+      {/* Headline */}
       <div className="group-header-details">
         <h1>{group.name}</h1>
         <p>{group.description}</p>
       </div>
+
+      {/* Buttons */}
       {isAdmin ? (
         <button className="btn-manage-group" onClick={handleManageGroup}>
           Manage Group
@@ -87,6 +94,8 @@ const GroupHeader = ({ group }) => {
           Add Post
         </button>
       ) : null}
+
+      {/* Popup */}
       <Popup
         isVisible={showLoginPopup}
         title="You need to log in"

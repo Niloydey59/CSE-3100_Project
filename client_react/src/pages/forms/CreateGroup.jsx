@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 // Api
-import { createGroup } from "../FetchApi";
+import { createGroup } from "../../FetchApi";
 // Styling
-import "../styling/CreateGroup.css";
+import "../../styling/forms/CreateGroup.css";
 
 const CreateGroup = () => {
   const [name, setName] = useState("");
@@ -31,8 +31,13 @@ const CreateGroup = () => {
 
   return (
     <div className="create-group-page">
+      {/* Page Headline */}
       <h1>Create a New Group</h1>
+
+      {/* Error Section */}
       {error && <p className="error">{error}</p>}
+
+      {/* Create Group Form */}
       <form onSubmit={handleCreateGroup} className="create-group-form">
         <div className="form-group">
           <label htmlFor="name">Group Name:</label>
@@ -45,6 +50,7 @@ const CreateGroup = () => {
             required
           />
         </div>
+
         <div className="form-group">
           <label htmlFor="description">Description:</label>
           <textarea
@@ -55,6 +61,8 @@ const CreateGroup = () => {
             required
           ></textarea>
         </div>
+
+        {/* Submit Button */}
         <button type="submit" className="submit-button">
           Create Group
         </button>

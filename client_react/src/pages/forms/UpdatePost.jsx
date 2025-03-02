@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 // API
-import { fetchPostsById, updatePostById } from "../FetchApi";
-
+import { fetchPostsById, updatePostById } from "../../FetchApi";
 // Styling
-import "../styling/dashboard/updatePost.css";
+import "../../styling/forms/updatepost.css";
 
 const UpdatePost = () => {
   const { id } = useParams(); // Get post ID from URL
   const navigate = useNavigate();
 
+  // States
   const [post, setPost] = useState({ title: "", content: "", tags: [] });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -54,14 +54,20 @@ const UpdatePost = () => {
     }
   };
 
+  // Loading state
   if (loading) return <p>Loading...</p>;
+  // Error state
   if (error) return <p className="error">{error}</p>;
 
   return (
     <div className="update-post-container">
+      {/* Page Headline */}
       <h2>Update Post</h2>
+
+      {/* Update Post Form */}
       <form className="update-post-form" onSubmit={handleSubmit}>
         <div className="form-group">
+          {/* Tittle */}
           <label htmlFor="title">Title</label>
           <input
             type="text"
@@ -72,7 +78,9 @@ const UpdatePost = () => {
             required
           />
         </div>
+
         <div className="form-group">
+          {/* Content */}
           <label htmlFor="content">Content</label>
           <textarea
             id="content"
@@ -82,7 +90,9 @@ const UpdatePost = () => {
             required
           ></textarea>
         </div>
+
         <div className="form-group">
+          {/* Tags */}
           <label htmlFor="tags">Tags</label>
           <input
             type="text"
@@ -97,6 +107,8 @@ const UpdatePost = () => {
             }
           />
         </div>
+
+        {/* Submit Button */}
         <button type="submit" className="update-button">
           Update Post
         </button>

@@ -1,16 +1,20 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
+// API
 import { dislikePost, likePost } from "../../FetchApi";
+// Context
 import { useAuth } from "../../context/authcontext";
-
 // Styling
-import "../../styling/home/postItem.css";
+import "../../styling/posts/postItem.css";
+import Popup from "../common/Popup";
 
 const PostItem = ({ post, updatePost, showActions, onAction }) => {
   const { currentUser } = useAuth(); // Get currentUser from context
-  const [showPopup, setShowPopup] = useState(false);
+
+  // states
   const [showMenu, setShowMenu] = useState(false);
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
 
   const truncate = (str, n) => {
     return str.length > n ? str.substring(0, n) + "..." : str; // Truncate the string if it's longer than n
@@ -18,7 +22,7 @@ const PostItem = ({ post, updatePost, showActions, onAction }) => {
 
   const handleLike = async (id) => {
     if (!currentUser) {
-      setShowPopup(true); // Show popup if user is not logged in
+      setShowLoginPopup(true); // Show popup if user is not logged in
       return;
     }
 
@@ -33,7 +37,7 @@ const PostItem = ({ post, updatePost, showActions, onAction }) => {
 
   const handleDislike = async (id) => {
     if (!currentUser) {
-      setShowPopup(true);
+      setShowLoginPopup(true);
       return;
     }
 
@@ -48,7 +52,7 @@ const PostItem = ({ post, updatePost, showActions, onAction }) => {
 
   // close the popup
   const closePopup = () => {
-    setShowPopup(false);
+    setShowLoginPopup(false);
   };
 
   // Handle the action from the dropdown menu (update or delete)
@@ -68,12 +72,15 @@ const PostItem = ({ post, updatePost, showActions, onAction }) => {
       {/* Show dropdown menu if showActions is true */}
       {showActions && (
         <div className="actions">
+          {/* Dropdown Button */}
           <button
             className="action-icon"
             onClick={() => setShowMenu((prev) => !prev)}
           >
             <i class="fa-solid fa-ellipsis-vertical"></i>
           </button>
+
+          {/* Dropdown Menu */}
           {showMenu && (
             <div className="dropdown-menu">
               <button onClick={() => handleAction("update")}>Update</button>
@@ -103,11 +110,13 @@ const PostItem = ({ post, updatePost, showActions, onAction }) => {
 
       {/* Post Actions */}
       <div className="post-actions">
+        {/* Likes */}
         <span className={`action-button`} onClick={() => handleLike(post._id)}>
           <div className={`like-icon${hasLiked ? "liked" : ""}`}>
             <i className="fa-solid fa-thumbs-up">{post.likes.length}</i>
           </div>
         </span>
+        {/* Dislikes */}
         <span
           className={`action-button`}
           onClick={() => handleDislike(post._id)}
@@ -116,29 +125,20 @@ const PostItem = ({ post, updatePost, showActions, onAction }) => {
             <i className="fa-solid fa-thumbs-down">{post.dislikes.length}</i>
           </div>
         </span>
+        {/* Comments */}
         <span>
           <i class="fa-regular fa-comment"></i>
           {post.comments.length}
         </span>
       </div>
 
-      {/* {Popup Menu}  */}
-      {showPopup && (
-        <div className="popup-overlay">
-          <div className="popup">
-            <h2>You need to log in</h2>
-            <p>Login to like or dislike posts.</p>
-            <div className="popup-actions">
-              <Link to="/login" className="popup-button">
-                Login Now
-              </Link>
-              <button className="popup-button close" onClick={closePopup}>
-                Maybe Later
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Login Popup */}
+      <Popup
+        isVisible={showLoginPopup}
+        title="You need to log in"
+        message="Login to add a post."
+        onClose={closePopup}
+      />
     </div>
   );
 };

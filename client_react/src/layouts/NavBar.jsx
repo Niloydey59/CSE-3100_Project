@@ -1,13 +1,16 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/authcontext";
 import "../styling/header.css";
+import { useSidebar } from "../context/sidebarContext";
 
 const Navbar = () => {
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState(""); // State for search query
+  const [searchQuery, setSearchQuery] = useState("");
   const { currentUser } = useAuth();
   const navigate = useNavigate();
+
+  const { toggleSidebar } = useSidebar();
 
   const handleToggleNav = () => {
     setIsMobileNavOpen(!isMobileNavOpen);
@@ -33,29 +36,32 @@ const Navbar = () => {
   return (
     <div>
       <section id="header">
+        {/* Add left hamburger menu */}
+        <div className="left-menu">
+          <i
+            className="fa-solid fa-bars"
+            onClick={toggleSidebar}
+            title="Toggle Sidebar"
+          ></i>
+        </div>
+
         <Link to="/" id="logo">
           <div>Stack RUET</div>
         </Link>
 
         <section id="left-section">
-          <Link to="/" className="icon">
+          <Link to="/" className="icon" title="Home">
             <i className="fa-solid fa-house"></i>
           </Link>
-          <Link to="/groups" className="icon">
+          <Link to="/groups" className="icon" title="Groups">
             <i className="fa-solid fa-users-line"></i>
           </Link>
         </section>
 
         <form id="search-bar" onSubmit={handleSearchSubmit}>
-          <select>
-            <option value="all">All</option>
-            <option value="posts">Posts</option>
-            <option value="users">Users</option>
-          </select>
-
           <input
             type="text"
-            placeholder="Type here to Search"
+            placeholder="Search..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -65,7 +71,22 @@ const Navbar = () => {
         </form>
 
         <section id="right-section">
-          <Link to="#" className="icon" onClick={handleProfileClick}>
+          {currentUser && (
+            <>
+              <Link to="/notifications" className="icon" title="Notifications">
+                <i className="fa-solid fa-bell"></i>
+              </Link>
+              <Link to="/chat" className="icon" title="Chat">
+                <i className="fa-solid fa-message"></i>
+              </Link>
+            </>
+          )}
+          <Link
+            to="#"
+            className="icon"
+            onClick={handleProfileClick}
+            title="Profile"
+          >
             <i className="fa-solid fa-user"></i>
           </Link>
         </section>
@@ -85,22 +106,35 @@ const Navbar = () => {
             ></i>
             <ul>
               <li>
-                <Link to="/" className="icon">
+                <Link to="/" className="icon" onClick={handleToggleNav}>
                   <i className="fa-solid fa-house"></i>
                 </Link>
               </li>
               <li>
-                <Link to="/groups" className="icon">
+                <Link to="/groups" className="icon" onClick={handleToggleNav}>
                   <i className="fa-solid fa-users-line"></i>
                 </Link>
               </li>
               <li>
-                <Link to="#" className="icon">
+                <Link
+                  to="/notifications"
+                  className="icon"
+                  onClick={handleToggleNav}
+                >
+                  <i className="fa-solid fa-bell"></i>
+                </Link>
+              </li>
+              <li>
+                <Link to="/chat" className="icon" onClick={handleToggleNav}>
                   <i className="fa-solid fa-message"></i>
                 </Link>
               </li>
               <li>
-                <Link to="/login" className="icon">
+                <Link
+                  to="/dashboard"
+                  className="icon"
+                  onClick={handleToggleNav}
+                >
                   <i className="fa-solid fa-user"></i>
                 </Link>
               </li>

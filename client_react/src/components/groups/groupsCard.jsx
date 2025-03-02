@@ -1,11 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const GroupCard = ({ group, updateGroup }) => {
-  const truncate = (str, n) => {
-    return str.length > n ? str.substring(0, n) + "..." : str; // Truncate the string if it's longer than n
-  };
-
+const GroupCard = ({ group }) => {
   return (
     <div className="group-card">
       <h3>{group.name}</h3>

@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+
+// Api
 import { fetchGroupMembers } from "../../FetchApi";
 
 const ManageMembers = ({ groupId }) => {
+  //States
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
 

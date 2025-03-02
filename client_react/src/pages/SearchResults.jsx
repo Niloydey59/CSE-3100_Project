@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
-import "../styling/home/home.css";
-
+// Components
 import PageTitle from "../components/common/PageTitle";
-import PostList from "../components/home/PostList";
+import PostList from "../components/posts/PostList";
+// Styling
+import "../styling/home/home.css";
+// API
 import { fetchPosts } from "../FetchApi";
 
 const SearchResults = () => {

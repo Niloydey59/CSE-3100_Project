@@ -1,33 +1,44 @@
 import React from "react";
-
-// Styling
+import { useSidebar } from "../../context/sidebarContext";
 import "../../styling/home/sidebar.css";
 
 const Sidebar = () => {
-  return (
-    <aside className="sidebar">
-      <div className="sidebar-section">
-        <ul>
-          <li>
-            <i class="fa-solid fa-plus"></i> Newest
-          </li>
-          <li>
-            <i class="fa-solid fa-fire-flame-curved"></i> Popular of the day
-          </li>
-          <li>Following</li>
-        </ul>
-      </div>
+  const { isSidebarOpen, toggleSidebar } = useSidebar();
 
-      <div className="sidebar-section">
-        <h2>Popular Tags</h2>
-        <ul>
-          <li># javascript</li>
-          <li># reactjs</li>
-          <li># webdevelopment</li>
-          {/* Add more tags */}
-        </ul>
-      </div>
-    </aside>
+  return (
+    <>
+      <aside className={`sidebar ${isSidebarOpen ? "active" : ""}`}>
+        <div className="close-button" onClick={toggleSidebar}>
+          <i className="fa-solid fa-xmark"></i>
+        </div>
+        <div className="sidebar-section">
+          <ul>
+            <li>
+              <i className="fa-solid fa-plus"></i> Newest
+            </li>
+            <li>
+              <i className="fa-solid fa-fire-flame-curved"></i> Popular of the
+              day
+            </li>
+            <li>
+              <i className="fa-solid fa-person-walking"></i>Following
+            </li>
+          </ul>
+        </div>
+
+        <div className="sidebar-section">
+          <h2>Popular Tags</h2>
+          <ul>
+            <li># javascript</li>
+            <li># reactjs</li>
+            <li># webdevelopment</li>
+          </ul>
+        </div>
+      </aside>
+      {isSidebarOpen && (
+        <div className="sidebar-overlay" onClick={toggleSidebar}></div>
+      )}
+    </>
   );
 };
 

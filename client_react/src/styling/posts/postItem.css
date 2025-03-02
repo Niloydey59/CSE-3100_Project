@@ -68,6 +68,7 @@
 .post-actions {
   display: flex;
   align-items: center;
+  justify-content: space-evenly;
   gap: 2rem;
   margin-top: 1rem;
   padding-top: 1rem;
@@ -104,6 +105,9 @@
   transition: all 0.2s ease;
   padding: 0.5rem;
   border-radius: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
 .action-button:hover {

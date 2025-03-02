@@ -113,7 +113,7 @@ const PostItem = ({ post, updatePost, showActions, onAction }) => {
         {/* Likes */}
         <span className={`action-button`} onClick={() => handleLike(post._id)}>
           <div className={`like-icon${hasLiked ? "liked" : ""}`}>
-            <i className="fa-solid fa-thumbs-up">{post.likes.length}</i>
+            <i className="fa-solid fa-thumbs-up"> {post.likes.length}</i>
           </div>
         </span>
         {/* Dislikes */}
@@ -122,13 +122,12 @@ const PostItem = ({ post, updatePost, showActions, onAction }) => {
           onClick={() => handleDislike(post._id)}
         >
           <div className={`like-icon${hasDisliked ? "disliked" : ""}`}>
-            <i className="fa-solid fa-thumbs-down">{post.dislikes.length}</i>
+            <i className="fa-solid fa-thumbs-down"> {post.dislikes.length}</i>
           </div>
         </span>
         {/* Comments */}
         <span>
-          <i class="fa-regular fa-comment"></i>
-          {post.comments.length}
+          <i class="fa-regular fa-comment"></i> {post.comments.length}
         </span>
       </div>
 

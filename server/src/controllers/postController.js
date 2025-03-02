@@ -221,8 +221,7 @@ const likePostById = async (req, res, next) => {
     const options = {};
     //console.log(req.user);
     const user = await findWithId(User, req.user._id, options);
-    const post = await findWithId(Post, postid, options);
-
+    const post = await Post.findById(postid).populate("author", "username");
     //check if user already liked the post
     if (post.likes.includes(user._id)) {
       // remove user id from post likes array
@@ -240,6 +239,14 @@ const likePostById = async (req, res, next) => {
 
     //add user id to post likes array
     post.likes.push(user._id);
+
+    // check if user already disliked the post
+    if (post.dislikes.includes(user._id)) {
+      // remove user id from post dislikes array
+      post.dislikes = post.dislikes.filter(
+        (dislike) => !dislike.equals(user._id)
+      );
+    }
 
     //save post
     const updatedPost = await post.save();
@@ -262,7 +269,7 @@ const dislikePostById = async (req, res, next) => {
     const options = {};
     console.log(req.user);
     const user = await findWithId(User, req.user._id, options);
-    const post = await findWithId(Post, postid, options);
+    const post = await Post.findById(postid).populate("author", "username");
 
     //check if user already disliked the post
     if (post.dislikes.includes(user._id)) {
@@ -281,8 +288,13 @@ const dislikePostById = async (req, res, next) => {
       });
     }
 
-    //add user id to post likes array
+    //add user id to post dislikes array
     post.dislikes.push(user._id);
+    // check if user already liked the post
+    if (post.likes.includes(user._id)) {
+      // remove user id from post likes array
+      post.likes = post.likes.filter((like) => !like.equals(user._id));
+    }
 
     //save post
     const updatedPost = await post.save();

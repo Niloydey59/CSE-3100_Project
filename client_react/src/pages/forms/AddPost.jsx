@@ -45,10 +45,13 @@ const AddPostPage = () => {
       formData.append("content", content);
 
       // Add tags as an array
-      tags
-        .split(",")
-        .map((tag) => tag.trim())
-        .forEach((tag) => formData.append("tags[]", tag));
+      if (tags.trim()) {
+        tags
+          .split(",")
+          .map((tag) => tag.trim())
+          .filter((tag) => tag.length > 0) // Filter out empty tags
+          .forEach((tag) => formData.append("tags[]", tag));
+      }
 
       // Append images
       images.forEach((image) => formData.append("image", image));

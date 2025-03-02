@@ -1,23 +1,22 @@
-import React, { useEffect, useState } from "react";
-import { Helmet } from "react-helmet";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+
 // Context
 import { useAuth } from "../context/authcontext";
+
 // components
 import PageTitle from "../components/common/PageTitle";
 import Sidebar from "../components/home/Sidebar";
 import PostList from "../components/posts/PostList";
 import Popup from "../components/common/Popup";
 import CreatePostBanner from "../components/home/CreatePostBanner";
+
 // API
 import { fetchPosts } from "../FetchApi";
+
 // styling
 import "../styling/home/home.css";
 
 const Home = () => {
-  const navigate = useNavigate();
-
-  const { currentUser } = useAuth();
   const [showLoginPopup, setShowLoginPopup] = useState(false);
 
   const [posts, setPosts] = useState([]);
@@ -28,7 +27,6 @@ const Home = () => {
   const [error, setError] = useState("");
   const [totalPosts, setTotalPosts] = useState(0); // Add totalPosts state
   const limit = 5; // Posts per page
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     const loadPosts = async () => {
@@ -71,6 +69,7 @@ const Home = () => {
         {/* Sidebar Section with mobile support */}
         <Sidebar />
 
+        {/* Post Section */}
         <div className="post-section">
           <CreatePostBanner />
           <PostList
@@ -88,6 +87,7 @@ const Home = () => {
         </div>
       </div>
 
+      {/* Popup for login */}
       <Popup
         isVisible={showLoginPopup}
         title="You need to log in"

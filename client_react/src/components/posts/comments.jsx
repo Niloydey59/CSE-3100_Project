@@ -42,8 +42,17 @@ const Comments = ({ postId }) => {
       const commentData = { content };
 
       const data = await addComment(commentData, postId);
+      const newCommentData = {
+        ...data.payload,
+        author: {
+          _id: currentUser._id,
+          username: currentUser.username,
+          photoURL: currentUser.photoURL || null,
+        },
+      };
+      console.log("Comment added:", data.payload);
 
-      setComments((prevComments) => [...prevComments, data.payload]); // Append the new comment
+      setComments((prevComments) => [...prevComments, newCommentData]); // Append the new comment
       setNewComment(""); // Clear the input field
     } catch (error) {
       console.error("Error adding comment:", error);
@@ -57,39 +66,54 @@ const Comments = ({ postId }) => {
 
   return (
     <div className="comments-section">
-      {/* Headline */}
-      <h2>Comments</h2>
+      <h2>Comments ({comments.length})</h2>
 
-      {/* Comments list */}
       <div className="comments-list">
         {comments.length > 0 ? (
           comments.map((comment, index) => (
             <div key={index} className="comment">
-              <p>
-                <strong>{comment.author.username}:</strong> {comment.content}
-              </p>
+              <div className="comment-header">
+                <div className="comment-avatar">
+                  {comment.author.photoURL ? (
+                    <img
+                      src={comment.author.photoURL}
+                      alt={comment.author.username}
+                    />
+                  ) : (
+                    comment.author.username[0]
+                  )}
+                </div>
+                <span className="comment-author">
+                  {comment.author.username}
+                </span>
+                <span className="comment-date">
+                  {new Date(comment.createdAt).toLocaleDateString()}
+                </span>
+              </div>
+              <div className="comment-content">{comment.content}</div>
             </div>
           ))
         ) : (
-          <p>No comments yet. Be the first to comment!</p>
+          <div className="no-comments">
+            <i className="fa-regular fa-comment"></i>
+            <p>No comments yet. Be the first to share your thoughts!</p>
+          </div>
         )}
       </div>
 
-      {/* Add comment form */}
       <div className="add-comment">
         <textarea
-          placeholder="Add a comment..."
+          placeholder="Write a comment..."
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
-        ></textarea>
-        <button onClick={handleAddComment}>Submit</button>
+        />
+        <button onClick={handleAddComment}>Post Comment</button>
       </div>
 
-      {/* Login Popup */}
       <Popup
         isVisible={showLoginPopup}
         title="You need to log in"
-        message="Login to add a post."
+        message="Login to add a comment."
         onClose={closePopup}
       />
     </div>

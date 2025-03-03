@@ -1,18 +1,18 @@
 import { Route, Routes } from "react-router-dom";
 
-import Home from "../pages/home";
-import Login from "../pages/forms/login";
-import Error from "../pages/Error";
-import Groups from "../pages/groups/Groups";
-import PostDetails from "../pages/posts/postDetails";
-import GroupDetailsPage from "../pages/groups/groupDetails";
-import Dashboard from "../pages/Dashboard";
-import SearchResults from "../pages/SearchResults";
-import ActivateAccount from "../pages/ActivateAcount";
-import UpdatePost from "../pages/forms/UpdatePost";
-import CreateGroup from "../pages/forms/CreateGroup";
-import AddPostPage from "../pages/forms/AddPost";
-import ManageGroupPage from "../pages/groups/ManageGroup";
+import Home from "./../pages/home";
+import Login from "./../pages/forms/login";
+import Error from "./../pages/Error";
+import Groups from "./../pages/groups/Groups";
+import PostDetails from "./../pages/posts/postDetails";
+import GroupDetailsPage from "./../pages/groups/groupDetails";
+import Dashboard from "./../pages/Dashboard";
+import SearchResults from "./../pages/SearchResults";
+import ActivateAccount from "./../pages/ActivateAcount";
+import UpdatePost from "./../pages/forms/UpdatePost";
+import CreateGroup from "./../pages/forms/CreateGroup";
+import AddPostPage from "./../pages/forms/AddPost";
+import ManageGroupPage from "./../pages/groups/ManageGroup";
 
 const AppRoutes = () => {
   return (

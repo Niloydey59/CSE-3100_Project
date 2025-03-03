@@ -2,11 +2,12 @@ import React, { useState } from "react";
 
 import { useAuth } from "../context/authcontext";
 
-import DashSidebar from "../components/dashboard/DashSidebar";
-import UserInfo from "../components/dashboard/UserInfo";
-import UserPosts from "../components/dashboard/UserPosts";
-import UserGroups from "../components/dashboard/UserGroups";
-
+// Components
+import DashSidebar from "../components/dashboard/dashSidebar";
+import UserInfo from "../components/dashboard/userInfo";
+import UserPosts from "../components/dashboard/userPosts";
+import UserGroups from "../components/dashboard/userGroups";
+// Styling
 import "../styling/dashboard/dashboard.css";
 
 const Dashboard = () => {

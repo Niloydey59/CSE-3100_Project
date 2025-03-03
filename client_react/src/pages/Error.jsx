@@ -1,7 +1,8 @@
 import React from "react";
 import { Helmet } from "react-helmet";
 
-import PageTitle from "../components/common/PageTitle";
+// Components
+import PageTitle from "../components/common/pageTitle";
 
 const Error = () => {
   return (

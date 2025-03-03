@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 // components
-import PostItem from "./PostCard";
+import PostItem from "./postCard";
 // api
 import { fetchPosts } from "../../FetchApi/index";
 // styling

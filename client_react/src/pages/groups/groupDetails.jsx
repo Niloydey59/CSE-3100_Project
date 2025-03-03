@@ -5,9 +5,9 @@ import { Helmet } from "react-helmet";
 // Api
 import { fetchGroupDetails } from "../../FetchApi";
 // Components
-import GroupHeader from "../../components/groups/GroupHeader";
-import GroupPosts from "../../components/groups/GroupPosts";
-import GroupSidebar from "../../components/groups/GroupSidebar";
+import GroupHeader from "../../components/groups/groupHeader";
+import GroupPosts from "../../components/groups/groupPosts";
+import GroupSidebar from "../../components/groups/groupSidebar";
 // Styling
 import "../../styling/groups/groupDetails.css";
 

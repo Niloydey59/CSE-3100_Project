@@ -1,5 +1,8 @@
 import React from "react";
+
+// Context
 import { useSidebar } from "../../context/sidebarContext";
+// Styling
 import "../../styling/home/sidebar.css";
 
 const Sidebar = () => {

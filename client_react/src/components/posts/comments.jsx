@@ -6,7 +6,8 @@ import { useAuth } from "../../context/authcontext";
 import { fetchComments, addComment } from "../../FetchApi";
 // Styling
 import "../../styling/posts/comments.css";
-import Popup from "../common/Popup";
+// Components
+import Popup from "../common/popup";
 
 const Comments = ({ postId }) => {
   const { currentUser } = useAuth();

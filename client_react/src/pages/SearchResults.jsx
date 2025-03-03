@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 // Components
-import PageTitle from "../components/common/PageTitle";
-import PostList from "../components/posts/PostList";
+import PageTitle from "../components/common/pageTitle";
+import PostList from "../components/posts/postList";
 // Styling
 import "../styling/home/home.css";
 // API

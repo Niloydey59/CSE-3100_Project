@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 // Context
 import { useAuth } from "../../context/authcontext";
 // Components
-import Popup from "../common/Popup";
+import Popup from "../common/popup";
 // Styling
 import "../../styling/groups/groupHeader.css";
 // Api

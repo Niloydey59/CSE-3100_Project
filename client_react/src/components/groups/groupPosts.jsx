@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 // Components
-import PostList from "../posts/PostList";
+import PostList from "../posts/postList";
 // Styling
 import "../../styling/groups/groupPosts.css";
 // API

@@ -1,11 +1,12 @@
 import { Route, Routes } from "react-router-dom";
 
-import Home from "./../pages/home";
-import Login from "./../pages/forms/login";
+// Pages
+import Home from "./../pages/Home";
+import Login from "./../pages/forms/Login";
 import Error from "./../pages/Error";
 import Groups from "./../pages/groups/Groups";
-import PostDetails from "./../pages/posts/postDetails";
-import GroupDetailsPage from "./../pages/groups/groupDetails";
+import PostDetails from "../pages/posts/PostDetails";
+import GroupDetailsPage from "../pages/groups/GroupDetails";
 import Dashboard from "./../pages/Dashboard";
 import SearchResults from "./../pages/SearchResults";
 import ActivateAccount from "./../pages/ActivateAcount";

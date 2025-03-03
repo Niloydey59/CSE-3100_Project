@@ -7,7 +7,8 @@ import { dislikePost, likePost } from "../../FetchApi";
 import { useAuth } from "../../context/authcontext";
 // Styling
 import "../../styling/posts/postItem.css";
-import Popup from "../common/Popup";
+// Components
+import Popup from "../common/popup";
 
 const PostItem = ({ post, updatePost, showActions, onAction }) => {
   const { currentUser } = useAuth(); // Get currentUser from context

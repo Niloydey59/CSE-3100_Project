@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../context/authcontext";
 
 // components
-import PageTitle from "../components/common/PageTitle";
-import Sidebar from "../components/home/Sidebar";
-import PostList from "../components/posts/PostList";
-import Popup from "../components/common/Popup";
-import CreatePostBanner from "../components/home/CreatePostBanner";
+import PageTitle from "../components/common/pageTitle";
+import Sidebar from "../components/home/sidebar";
+import PostList from "../components/posts/postList";
+import Popup from "../components/common/popup";
+import CreatePostBanner from "../components/home/createPostBanner";
 
 // API
 import { fetchPosts } from "../FetchApi";

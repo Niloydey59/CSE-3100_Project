@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 // Api
 import { createGroup } from "../../FetchApi";
 // Styling
-import "../../styling/forms/CreateGroup.css";
+import "../../styling/forms/createGroup.css";
 
 const CreateGroup = () => {
   const [name, setName] = useState("");

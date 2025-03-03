@@ -7,11 +7,11 @@ import Slider from "react-slick";
 import { useAuth } from "../../context/authcontext";
 // Components
 import Comments from "../../components/posts/comments";
+import Popup from "../../components/common/popup";
 // API
 import { dislikePost, fetchPostDetails, likePost } from "../../FetchApi/index";
 // Styling
 import "../../styling/posts/postDetails.css";
-import Popup from "../../components/common/Popup";
 
 const PostDetails = () => {
   const { postId } = useParams();

@@ -4,6 +4,7 @@ import { useAuth } from "../../context/authcontext";
 
 // Styling
 import "../../styling/dashboard/userInfo.css";
+// API
 import { sendVerificationEmail, updatePassword } from "../../FetchApi";
 
 const UserInfo = () => {

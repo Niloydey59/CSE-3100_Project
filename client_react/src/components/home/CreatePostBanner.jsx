@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+// Context
 import { useAuth } from "../../context/authcontext";
+// Styling
 import "../../styling/home/createPostBanner.css";
 
 const CreatePostBanner = () => {

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+
+// Api
 import { verifyEmail } from "../FetchApi/user";
 import { signOutUser } from "../FetchApi";
 

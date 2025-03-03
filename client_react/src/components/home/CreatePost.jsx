@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
+// Context
 import { useAuth } from "../../context/authcontext";
+// API
 import { createPost } from "../../FetchApi";
-
 // Styling
 import "../../styling/home/createPost.css";
 

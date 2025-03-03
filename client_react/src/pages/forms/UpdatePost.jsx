@@ -4,7 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 // API
 import { fetchPostsById, updatePostById } from "../../FetchApi";
 // Styling
-import "./../../styling/forms/updatepost.css";
+import "../../styling/forms/updatePost.css";
 
 const UpdatePost = () => {
   const { id } = useParams(); // Get post ID from URL

@@ -39,7 +39,7 @@ app.use(bodyParser.json()); // Also parse JSON data
 // Use CORS middleware
 app.use(
   cors({
-    origin: "http://localhost:5173", // Replace with your frontend URL
+    origin: "https://stack-ruet.onrender.com/", // Replace with your frontend URL
     credentials: true, // Enable cookies to be sent across domains
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allowed HTTP methods
     allowedHeaders: ["Content-Type", "Authorization"], // Headers allowed in requests

@@ -43,7 +43,7 @@
 	position: absolute;
 	top: 0;
 	height: 100%;
-	width: 50%;
+	width: 48%; /* Slightly reduced from 50% */
 	transition: all 0.6s ease-in-out;
 	display: flex;
 	align-items: center;
@@ -87,8 +87,8 @@
   .overlay-container {
 	position: absolute;
 	top: 0;
-	left: 50%;
-	width: 50%;
+	left: 48%; /* Match with form-container width */
+	width: 52%; /* Remaining width */
 	height: 100%;
 	overflow: hidden;
 	transition: transform 0.6s ease-in-out;
@@ -106,7 +106,7 @@
 	background-repeat: no-repeat;
 	background-size: cover;
 	background-position: 0 0;
-	color: hsl(0, 0%, 100%);
+	color: #ffffff;
 	position: relative;
 	left: -100%;
 	height: 100%;
@@ -125,17 +125,51 @@
 	align-items: center;
 	justify-content: center;
 	flex-direction: column;
-	padding: 0 40px;
+	padding: 0px 30px; /* Reduced padding */
 	text-align: center;
 	top: 0;
 	height: 100%;
-	width: 50%;
+	width: 55%; /* Increased from 50% */
 	transform: translateX(0);
 	transition: transform 0.6s ease-in-out;
   }
   
+  .overlay-panel h1 {
+	font-size: 1.8em; /* Slightly reduced */
+	font-weight: bold;
+	margin-bottom: 12px;
+	letter-spacing: 1px;
+	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  .overlay-panel p {
+	font-size: 0.95em;
+	margin-bottom: 25px;
+	letter-spacing: 0.5px;
+	line-height: 1.4;
+	text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+	max-width: 90%;
+  }
+  
+  .overlay-panel button.ghost {
+	background-color: transparent;
+	border: 2px solid #ffffff;
+	padding: 12px 45px;
+	letter-spacing: 1px;
+	transition: all 0.3s ease-in-out;
+  }
+  
+  .overlay-panel button.ghost:hover {
+	background-color: #ffffff;
+	color: #535C91;
+	transform: translateY(-2px);
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  }
+  
   .overlay-left {
 	transform: translateX(-20%);
+	left: -4%;
+	
   }
   
   .login-main.right-panel-active .overlay-left {
@@ -145,6 +179,7 @@
   .overlay-right {
 	right: 0;
 	transform: translateX(0);
+	left: 45%;
   }
   
   .login-main.right-panel-active .overlay-right {
@@ -178,6 +213,19 @@
 	border-color: hsl(0, 0%, 100%);
   }
   
+  .login-main button[type="button"] {
+	background: none;
+	border: none;
+	padding: 0;
+	margin: 0;
+	color: #535C91;
+	transition: color 0.3s ease;
+  }
+  
+  .login-main button[type="button"]:hover {
+	color: #333;
+  }
+  
   .login-main form {
 	background-color: hsl(0, 0%, 95%);
 	display: flex;
@@ -186,15 +234,45 @@
 	flex-direction: column;
 	padding: 0 50px;
 	height: 100%;
-	
+	width: 100%;
+	max-width: 400px;
   }
   
   .login-main input {
 	background-color: hsl(0, 0%, 100%);
-	border: none;
+	border: 1px solid #ddd;
+	border-radius: 4px;
 	padding: 12px 15px;
 	margin: 8px 0;
 	width: 100%;
+	box-sizing: border-box;
+  }
+
+  .password-input-container {
+	width: 100%;
+	position: relative;
+	margin: 8px 0;
+  }
+  
+  .password-input-container input {
+	margin: 0;
+  }
+  
+  .password-toggle-button {
+	position: absolute;
+	right: 10px;
+	top: 50%;
+	transform: translateY(-50%);
+	background: none;
+	border: none;
+	padding: 0;
+	margin: 0;
+	cursor: pointer;
+	color: #535C91;
+  }
+  
+  .password-toggle-button:hover {
+	color: #333;
   }
 
   .error {

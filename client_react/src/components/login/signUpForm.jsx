@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa"; // Add this import
 
 // API
 import { signUpUser } from "../../FetchApi/index"; // Adjust the import path as needed
@@ -10,6 +11,7 @@ const SignUpForm = () => {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
   const [generalError, setGeneralError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const validate = () => {
@@ -47,17 +49,9 @@ const SignUpForm = () => {
       window.location.reload(); // Reload the page
     } catch (error) {
       console.error("Error registering user:", error);
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        setGeneralError(error.response.data.message);
-      } else {
-        setGeneralError(
-          "An error occurred during registration. Please try again."
-        );
-      }
+      setGeneralError(
+        error.message || "An error occurred. Please try again later."
+      );
     }
   };
 
@@ -85,15 +79,25 @@ const SignUpForm = () => {
         }}
       />
       {errors.email && <p className="error">{errors.email}</p>}
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => {
-          setPassword(e.target.value);
-          setErrors((prevErrors) => ({ ...prevErrors, password: "" })); // Clear password error
-        }}
-      />
+
+      <div className="password-input-container">
+        <input
+          type={showPassword ? "text" : "password"}
+          placeholder="Password"
+          value={password}
+          onChange={(e) => {
+            setPassword(e.target.value);
+            setErrors((prevErrors) => ({ ...prevErrors, password: "" }));
+          }}
+        />
+        <button
+          type="button"
+          className="password-toggle-button"
+          onClick={() => setShowPassword(!showPassword)}
+        >
+          {showPassword ? <FaEyeSlash /> : <FaEye />}
+        </button>
+      </div>
       {errors.password && <p className="error">{errors.password}</p>}
       {generalError && <p className="error">{generalError}</p>}
       <button type="submit">Sign Up</button>

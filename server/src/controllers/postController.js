@@ -23,8 +23,8 @@ const createPost = async (req, res, next) => {
           throw createError(400, "Each image should be less than 2MB");
         }
       }
-      // Upload images to Cloudinary
 
+      // Upload images to Cloudinary
       for (const image of images) {
         const response = await cloudinary.uploader.upload(image.path, {
           folder: "StackRuet/posts",

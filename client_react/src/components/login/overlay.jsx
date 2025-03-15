@@ -10,7 +10,7 @@ const Overlay = ({ isSignUpActive, togglePanel }) => {
           }`}
         >
           <h1>Welcome Back!</h1>
-          <p>Please login with your personal details</p>
+          <p>Sign in to continue your journey with us</p>
           <button className="ghost" id="signIn" onClick={togglePanel}>
             Sign In
           </button>
@@ -21,7 +21,10 @@ const Overlay = ({ isSignUpActive, togglePanel }) => {
           }`}
         >
           <h1>Hello, Friend!</h1>
-          <p>Register your account </p>
+          <p>
+            Join our community and discover a world of opportunities and
+            connections
+          </p>
           <button className="ghost" id="signUp" onClick={togglePanel}>
             Sign Up
           </button>

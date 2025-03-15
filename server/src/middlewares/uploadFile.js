@@ -8,6 +8,13 @@ const poststorage = multer.diskStorage({
   },
 });
 
+// Verification image storage
+const verificationstorage = multer.diskStorage({
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+
 const fileFilter = (req, file, cb) => {
   if (!ALLOWED_FILE_TYPES.includes(file.mimetype)) {
     return cb(new Error("Only images are allowed"), false);
@@ -23,6 +30,13 @@ const uploadPostImage = multer({
   fileFilter: fileFilter,
 });
 
+const uploadVerificationImage = multer({
+  storage: verificationstorage,
+  limits: { fileSize: MAX_FILE_SIZE }, // Limit file size to 1MB
+  fileFilter: fileFilter,
+});
+
 module.exports = {
   uploadPostImage,
+  uploadVerificationImage,
 };

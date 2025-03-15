@@ -1,14 +1,14 @@
 const createError = require("http-errors"); // error-handling middleware
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 const User = require("../models/userModel");
 const { successResponse } = require("./responseController");
 const { findWithId } = require("../services/finditem");
-
 const { createJSONWebToken } = require("../helper/jsonwebtoken");
-const { jwtActivationKey, clientURL, jswtResetPassKey } = require("../secret");
 const { sendEmailWithNodeMailer } = require("../helper/email");
-const { runValidation } = require("../validators/validation");
+
+const { jwtActivationKey, clientURL, jswtResetPassKey } = require("../secret");
 
 const getUsers = async (req, res, next) => {
   try {
@@ -107,6 +107,11 @@ const processRegister = async (req, res, next) => {
     const userExist = await User.exists({ email: email });
     if (userExist) {
       throw createError(409, "User already exists!Please login.");
+    }
+
+    const usernameExist = await User.exists({ username: username });
+    if (usernameExist) {
+      throw createError(409, "Username already exists!Please try another.");
     }
 
     //print user data

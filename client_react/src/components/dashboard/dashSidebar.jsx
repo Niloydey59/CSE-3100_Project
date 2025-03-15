@@ -6,37 +6,31 @@ import "../../styling/dashboard/dashSidebar.css";
 const DashSidebar = ({ activeTab, setActiveTab, logout }) => {
   return (
     <div className="Dashsidebar">
-      {/* Dashboard Header */}
       <h3>Dashboard</h3>
-
-      {/* Navigation List */}
       <ul>
-        {/* User Information Tab */}
         <li
           onClick={() => setActiveTab("userInfo")}
           className={activeTab === "userInfo" ? "active" : ""}
         >
+          <i className="fa-solid fa-user"></i>
           User Information
         </li>
-
-        {/* User Posts Tab */}
         <li
           onClick={() => setActiveTab("userPosts")}
           className={activeTab === "userPosts" ? "active" : ""}
         >
-          User Posts
+          <i className="fa-solid fa-file-lines"></i>
+          My Posts
         </li>
-
-        {/* User Groups Tab */}
         <li
           onClick={() => setActiveTab("userGroups")}
           className={activeTab === "userGroups" ? "active" : ""}
         >
-          User Groups
+          <i className="fa-solid fa-users"></i>
+          My Groups
         </li>
-
-        {/* Logout Button */}
         <li onClick={logout} className="logout">
+          <i className="fa-solid fa-right-from-bracket"></i>
           Logout
         </li>
       </ul>

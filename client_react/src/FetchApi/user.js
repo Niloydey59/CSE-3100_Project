@@ -17,9 +17,10 @@ export const updatePassword = async ({
   oldPassword,
   newPassword,
   confirmPassword,
+  userId,
 }) => {
   try {
-    const response = await api.post("/users/update-password", {
+    const response = await api.put(`/users/update-password/${userId}`, {
       oldPassword,
       newPassword,
       confirmPassword,

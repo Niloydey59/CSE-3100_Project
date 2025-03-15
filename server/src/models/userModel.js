@@ -1,4 +1,4 @@
-const { Schema, model, Mongoose } = require("mongoose");
+const { Schema, model } = require("mongoose");
 const bcrypt = require("bcryptjs");
 
 const userSchema = new Schema(
@@ -37,6 +37,73 @@ const userSchema = new Schema(
       set: (v) => bcrypt.hashSync(v, bcrypt.genSaltSync(10)),
     },
 
+    bio: {
+      type: String,
+      maxlength: [500, "Bio cannot be more than 500 characters"],
+      default: "",
+    },
+
+    series: {
+      value: {
+        type: Number,
+        min: [1960, "Series year cannot be before 1960"],
+        max: [new Date().getFullYear(), "Series year cannot be in future"],
+        default: null,
+      },
+      isApproved: {
+        type: Boolean,
+        default: false,
+      },
+      pendingApproval: {
+        type: Boolean,
+        default: false,
+      },
+    },
+
+    position: {
+      value: {
+        type: String,
+        enum: [
+          "student",
+          "professor",
+          "associate_professor",
+          "assistant_professor",
+          "lecturer",
+          "lab_assistant",
+          "staff",
+        ],
+        default: null,
+      },
+      isApproved: {
+        type: Boolean,
+        default: false,
+      },
+      pendingApproval: {
+        type: Boolean,
+        default: false,
+      },
+    },
+
+    department: {
+      value: {
+        type: String,
+        enum: ["CSE", "EEE", "ME", "CE", "IPE", "GCE", "MTE", "ETE", "CFPE"],
+      },
+      isApproved: {
+        type: Boolean,
+        default: false,
+      },
+      pendingApproval: {
+        type: Boolean,
+        default: false,
+      },
+    },
+
+    verificationDocument: {
+      type: [String],
+      default: [],
+    },
+
     groups: [
       {
         type: Schema.Types.ObjectId,
@@ -44,12 +111,12 @@ const userSchema = new Schema(
       },
     ],
 
-    isAdmin: {
+    isVerified: {
       type: Boolean,
       default: false,
     },
 
-    isVerified: {
+    isAdmin: {
       type: Boolean,
       default: false,
     },

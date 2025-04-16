@@ -2,6 +2,15 @@ import axios from "axios";
 
 const API_URL = "http://localhost:3001/api"; // Backend URL
 
+const noInterceptorApi = axios.create({
+  baseURL: API_URL,
+  withCredentials: true,
+  headers: {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  },
+});
+
 const api = axios.create({
   baseURL: API_URL,
   withCredentials: true,
@@ -11,10 +20,42 @@ const api = axios.create({
   },
 });
 
+const isTokenExpired = (token) => {
+  try {
+    const decoded = jwtDecode(token);
+    const currentTime = Date.now() / 1000; // Convert to seconds
+    return decoded.exp < currentTime;
+  } catch {
+    return true; // If there's an error, consider the token expired
+  }
+};
+
+// Implement refresh function directly to avoid circular imports
+const refreshTokenFunction = async () => {
+  try {
+    console.log("Refreshing token...");
+    const response = await noInterceptorApi.post("/auth/refresh-token");
+    return response.data;
+  } catch (error) {
+    console.error("Failed to refresh token:", error);
+    throw error;
+  }
+};
+
 // Add request interceptor to inject token dynamically
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
+api.interceptors.request.use(async (config) => {
+  let token = localStorage.getItem("accessToken");
+
   if (token) {
+    if (isTokenExpired(token)) {
+      console.log("Token expired");
+      console.log("Interceptor calling refresh token function");
+      const response = await refreshTokenFunction();
+      token = response.payload.accessToken;
+      await localStorage.setItem("accessToken", token);
+
+      console.log("Token refreshed");
+    }
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;

@@ -8,6 +8,7 @@ const rateLimit = require("express-rate-limit");
 const cors = require("cors");
 
 const userRouter = require("./routers/userRouter");
+const adminRouter = require("./routers/adminRouter");
 const seedRouter = require("./routers/seedRouter");
 const { errorResponse } = require("./controllers/responseController");
 const authRouter = require("./routers/authRouter");
@@ -50,6 +51,7 @@ app.options("*", cors()); // Enable CORS for all preflight requests
 
 app.use("/api/seed", seedRouter);
 app.use("/api/users", userRouter);
+app.use("/api/admin", adminRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/posts", postRouter);
 app.use("/api/groups", groupRouter);

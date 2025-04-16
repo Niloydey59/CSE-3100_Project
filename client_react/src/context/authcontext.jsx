@@ -5,19 +5,38 @@ import { fetchCurrentUser, signInUser, signOutUser } from "../FetchApi";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState(null);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+
+  // Function to decode JWT and set user
+  const decodeAndSetUser = (token) => {
+    try {
+      console.log("Decoding token...");
+      const decoded = jwtDecode(token);
+      //console.log("Decoded token:", decoded);
+      setUser(decoded.user);
+      return decoded;
+    } catch (error) {
+      console.error("Error decoding token:", error);
+      setUser(null);
+      return null;
+    }
+  };
 
   // Fetch user data on app load (e.g., after a refresh or reopening the app)
   useEffect(() => {
     const getCurrentUser = async () => {
+      setLoading(true);
       try {
         const response = await fetchCurrentUser(); // Fetch current user data from the backend
         console.log("Current user data:", response.payload.user);
-        setCurrentUser(response.payload.user);
+        setUser(response.payload.user);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching user data", error);
-        setCurrentUser(null);
+        setUser(null);
+        setLoading(false);
       }
     };
     getCurrentUser();
@@ -28,7 +47,11 @@ export const AuthProvider = ({ children }) => {
     try {
       const data = await signInUser(credentials); // Call the login API
 
-      setCurrentUser(data.payload.user); // Set user in context
+      const { accessToken } = data.payload; // Get the access token from the response
+      localStorage.setItem("accessToken", accessToken); // Store the token in local storage
+
+      // Decode token and set user
+      decodeAndSetUser(accessToken);
 
       console.log("Login successful and context set ", data.payload.user);
 
@@ -43,13 +66,22 @@ export const AuthProvider = ({ children }) => {
 
   // Logout function to clear the context
   const logout = async () => {
-    setCurrentUser(null);
-    await signOutUser(); // Call the logout API
+    try {
+      await signOutUser(); // Call the logout API
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+
+    // Clear token and user regardless of API response
+    await localStorage.removeItem("accessToken");
+    setUser(null);
+
+    // Redirect to another page after logout
     window.location.href = "/";
   };
 
   return (
-    <AuthContext.Provider value={{ currentUser, login, logout }}>
+    <AuthContext.Provider value={{ user, setUser, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

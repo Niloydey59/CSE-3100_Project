@@ -17,7 +17,7 @@ const PostDetails = () => {
   const { postId } = useParams();
   const [post, setPost] = useState(null);
 
-  const { currentUser } = useAuth();
+  const { user } = useAuth();
   const [showLoginPopup, setShowLoginPopup] = useState(false);
 
   useEffect(() => {
@@ -85,7 +85,7 @@ const PostDetails = () => {
   };
 
   const handleLike = async (id) => {
-    if (!currentUser) {
+    if (!user) {
       setShowLoginPopup(true); // Show popup if user is not logged in
       return;
     }
@@ -100,7 +100,7 @@ const PostDetails = () => {
   };
 
   const handleDislike = async (id) => {
-    if (!currentUser) {
+    if (!user) {
       setShowLoginPopup(true);
       return;
     }
@@ -119,9 +119,9 @@ const PostDetails = () => {
     setShowLoginPopup(false);
   };
 
-  // Check if the currentUser has liked or disliked the post
-  const hasLiked = currentUser && post.likes.includes(currentUser._id);
-  const hasDisliked = currentUser && post.dislikes.includes(currentUser._id);
+  // Check if the user has liked or disliked the post
+  const hasLiked = user && post.likes.includes(user._id);
+  const hasDisliked = user && post.dislikes.includes(user._id);
 
   return (
     <div className="post-details">

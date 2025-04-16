@@ -1,18 +1,24 @@
 import React, { useState } from "react";
 import { useAuth } from "../../context/authcontext";
-import { sendVerificationEmail, updatePassword } from "../../FetchApi";
+import {
+  requestVerification,
+  sendVerificationEmail,
+  updatePassword,
+} from "../../FetchApi";
 import "../../styling/dashboard/userInfo.css";
 
 const UserInfo = () => {
-  const { currentUser } = useAuth();
+  const { user } = useAuth();
   const [editMode, setEditMode] = useState(false);
   const [verificationMessage, setVerificationMessage] = useState("");
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [passwordUpdateMessage, setPasswordUpdateMessage] = useState("");
+  const [showVerificationForm, setShowVerificationForm] = useState(false);
+  const [verificationSuccess, setVerificationSuccess] = useState(false);
   const [userForm, setUserForm] = useState({
-    username: currentUser.username,
-    bio: currentUser.bio || "",
-    photoURL: currentUser.photoURL || "",
+    username: user.username,
+    bio: user.bio || "",
+    photoURL: user.photoURL || "",
   });
   const [passwordForm, setPasswordForm] = useState({
     oldPassword: "",
@@ -23,6 +29,13 @@ const UserInfo = () => {
     oldPassword: false,
     newPassword: false,
     confirmPassword: false,
+  });
+  // New state for verification form
+  const [verificationForm, setVerificationForm] = useState({
+    series: "",
+    position: "",
+    department: "",
+    documents: null,
   });
 
   const togglePasswordVisibility = (field) => {
@@ -66,12 +79,12 @@ const UserInfo = () => {
     }
 
     try {
-      console.log("id=", currentUser._id);
+      console.log("id=", user._id);
       const response = await updatePassword({
         oldPassword: passwordForm.oldPassword,
         newPassword: passwordForm.newPassword,
         confirmPassword: passwordForm.confirmPassword,
-        userId: currentUser._id,
+        userId: user._id,
       });
 
       if (response.success) {
@@ -91,6 +104,60 @@ const UserInfo = () => {
     } catch (error) {
       setPasswordUpdateMessage(error.message || "Password update failed!");
       console.error("Password update error:", error);
+    }
+  };
+
+  const handleVerificationFormChange = (e) => {
+    const { name, value } = e.target;
+    setVerificationForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleFileChange = (e) => {
+    setVerificationForm((prev) => ({
+      ...prev,
+      documents: e.target.files,
+    }));
+  };
+
+  const handleVerificationSubmit = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    if (verificationForm.series)
+      formData.append("series", verificationForm.series);
+    if (verificationForm.position)
+      formData.append("position", verificationForm.position);
+    if (verificationForm.department)
+      formData.append("department", verificationForm.department);
+
+    // Handle file uploads
+    if (verificationForm.documents) {
+      for (let i = 0; i < verificationForm.documents.length; i++) {
+        formData.append("verificationProof", verificationForm.documents[i]);
+      }
+    }
+
+    try {
+      const response = await requestVerification(user._id, formData);
+
+      if (response.success) {
+        setVerificationSuccess(true);
+        setVerificationForm({
+          series: "",
+          position: "",
+          department: "",
+          documents: null,
+        });
+        setTimeout(() => {
+          setVerificationSuccess(false);
+          setShowVerificationForm(false);
+        }, 3000);
+      }
+    } catch (error) {
+      console.error("Verification submission error:", error);
     }
   };
 
@@ -121,7 +188,7 @@ const UserInfo = () => {
                 className="edit-input"
               />
             ) : (
-              <h2>{currentUser.username}</h2>
+              <h2>{user.username}</h2>
             )}
             <button
               className="edit-profile-btn"
@@ -148,21 +215,213 @@ const UserInfo = () => {
       </div>
 
       <div className="info-cards">
+        <div className="info-card verification-card">
+          <div className="card-header">
+            <i className="fa-solid fa-id-badge"></i>
+            <h3>University Verification</h3>
+          </div>
+          <div className="card-content">
+            <div className="verification-status-summary">
+              <div className="status-summary-item">
+                <span className="status-label">Series:</span>
+                <span
+                  className={`status-value ${
+                    user.series?.isApproved
+                      ? "verified"
+                      : user.series?.pendingApproval
+                      ? "pending"
+                      : "not-set"
+                  }`}
+                >
+                  {user.series?.isApproved
+                    ? "Verified"
+                    : user.series?.pendingApproval
+                    ? "Pending Approval"
+                    : "Not Set"}
+                </span>
+              </div>
+
+              <div className="status-summary-item">
+                <span className="status-label">Department:</span>
+                <span
+                  className={`status-value ${
+                    user.department?.isApproved
+                      ? "verified"
+                      : user.department?.pendingApproval
+                      ? "pending"
+                      : "not-set"
+                  }`}
+                >
+                  {user.department?.isApproved
+                    ? "Verified"
+                    : user.department?.pendingApproval
+                    ? "Pending Approval"
+                    : "Not Set"}
+                </span>
+              </div>
+
+              <div className="status-summary-item">
+                <span className="status-label">Position:</span>
+                <span
+                  className={`status-value ${
+                    user.position?.isApproved
+                      ? "verified"
+                      : user.position?.pendingApproval
+                      ? "pending"
+                      : "not-set"
+                  }`}
+                >
+                  {user.position?.isApproved
+                    ? "Verified"
+                    : user.position?.pendingApproval
+                    ? "Pending Approval"
+                    : "Not Set"}
+                </span>
+              </div>
+            </div>
+
+            <button
+              className="verify-status-btn"
+              onClick={() => setShowVerificationForm(!showVerificationForm)}
+            >
+              <i className="fa-solid fa-id-card"></i>
+              {showVerificationForm
+                ? "Hide Verification Form"
+                : "Request Verification"}
+            </button>
+
+            {showVerificationForm && (
+              <div className="verification-form">
+                {verificationSuccess ? (
+                  <div className="verification-success">
+                    <i className="fa-solid fa-check-circle"></i>
+                    <p>Verification request submitted successfully!</p>
+                    <p className="verification-note">
+                      Your request will be reviewed by an administrator.
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    <p className="verification-description">
+                      Submit your university ID card or any official document to
+                      verify your status
+                    </p>
+                    <form
+                      onSubmit={handleVerificationSubmit}
+                      className="verification-form-content"
+                    >
+                      <div className="form-group">
+                        <label htmlFor="series">Series Year</label>
+                        <input
+                          type="number"
+                          id="series"
+                          name="series"
+                          min="1960"
+                          max={new Date().getFullYear()}
+                          placeholder="Enter your series (e.g., 2020)"
+                          value={verificationForm.series}
+                          onChange={handleVerificationFormChange}
+                        />
+                      </div>
+
+                      <div className="form-group">
+                        <label htmlFor="department">Department</label>
+                        <select
+                          id="department"
+                          name="department"
+                          value={verificationForm.department}
+                          onChange={handleVerificationFormChange}
+                        >
+                          <option value="">Select Department</option>
+                          <option value="CSE">CSE</option>
+                          <option value="EEE">EEE</option>
+                          <option value="ME">ME</option>
+                          <option value="CE">CE</option>
+                          <option value="IPE">IPE</option>
+                          <option value="GCE">GCE</option>
+                          <option value="MTE">MTE</option>
+                          <option value="ETE">ETE</option>
+                          <option value="CFPE">CFPE</option>
+                        </select>
+                      </div>
+
+                      <div className="form-group">
+                        <label htmlFor="position">Position</label>
+                        <select
+                          id="position"
+                          name="position"
+                          value={verificationForm.position}
+                          onChange={handleVerificationFormChange}
+                        >
+                          <option value="">Select Position</option>
+                          <option value="student">Student</option>
+                          <option value="professor">Professor</option>
+                          <option value="associate_professor">
+                            Associate Professor
+                          </option>
+                          <option value="assistant_professor">
+                            Assistant Professor
+                          </option>
+                          <option value="lecturer">Lecturer</option>
+                          <option value="lab_assistant">Lab Assistant</option>
+                          <option value="staff">Staff</option>
+                        </select>
+                      </div>
+
+                      <div className="form-group">
+                        <label htmlFor="document">
+                          Upload Verification Document
+                        </label>
+                        <div className="file-input-container">
+                          <input
+                            type="file"
+                            id="document"
+                            name="document"
+                            onChange={handleFileChange}
+                            accept="image/*"
+                            required
+                          />
+                          <div className="file-input-button">
+                            <i className="fa-solid fa-upload"></i> Choose File
+                          </div>
+                          <span className="file-name">
+                            {verificationForm.documents
+                              ? `${verificationForm.documents.length} file(s) selected`
+                              : "No file chosen"}
+                          </span>
+                        </div>
+                        <p className="file-help-text">
+                          Upload your university ID card or official document
+                        </p>
+                      </div>
+
+                      <button type="submit" className="submit-verification-btn">
+                        <i className="fa-solid fa-paper-plane"></i> Submit for
+                        Verification
+                      </button>
+                    </form>
+                  </>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+
         <div className="info-card">
           <div className="card-header">
             <i className="fa-solid fa-lock"></i>
-            <h3>Security</h3>
+            <h3>Account Security</h3>
           </div>
           <div className="card-content">
             <div className="verification-section">
               <div className="verification-info">
-                <p>{currentUser.email}</p>
+                <p>{user.email}</p>
                 <span
                   className={`verification-status ${
-                    currentUser.isVerified ? "verified" : "not-verified"
+                    user.isVerified ? "verified" : "not-verified"
                   }`}
                 >
-                  {currentUser.isVerified ? (
+                  {user.isVerified ? (
                     <>
                       <i className="fa-solid fa-check-circle"></i> Verified
                     </>
@@ -174,7 +433,7 @@ const UserInfo = () => {
                   )}
                 </span>
               </div>
-              {!currentUser.isVerified && (
+              {!user.isVerified && (
                 <div className="verify-email-container">
                   <button
                     onClick={handleVerificationEmail}
@@ -214,6 +473,7 @@ const UserInfo = () => {
 
               {showPasswordForm && (
                 <form onSubmit={handlePasswordUpdate} className="password-form">
+                  {/* Password form content */}
                   <div className="form-group">
                     <label>
                       <i className="fa-solid fa-key"></i>
@@ -320,6 +580,18 @@ const UserInfo = () => {
                 </form>
               )}
             </div>
+
+            {passwordUpdateMessage && (
+              <div
+                className={`message ${
+                  passwordUpdateMessage.includes("successfully")
+                    ? "success"
+                    : "error"
+                }`}
+              >
+                {passwordUpdateMessage}
+              </div>
+            )}
           </div>
         </div>
       </div>

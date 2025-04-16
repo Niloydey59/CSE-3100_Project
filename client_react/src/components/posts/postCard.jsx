@@ -11,7 +11,7 @@ import "../../styling/posts/postItem.css";
 import Popup from "../common/popup";
 
 const PostItem = ({ post, updatePost, showActions, onAction }) => {
-  const { currentUser } = useAuth(); // Get currentUser from context
+  const { user } = useAuth(); // Get user from context
 
   // states
   const [showMenu, setShowMenu] = useState(false);
@@ -22,7 +22,7 @@ const PostItem = ({ post, updatePost, showActions, onAction }) => {
   };
 
   const handleLike = async (id) => {
-    if (!currentUser) {
+    if (!user) {
       setShowLoginPopup(true); // Show popup if user is not logged in
       return;
     }
@@ -37,7 +37,7 @@ const PostItem = ({ post, updatePost, showActions, onAction }) => {
   };
 
   const handleDislike = async (id) => {
-    if (!currentUser) {
+    if (!user) {
       setShowLoginPopup(true);
       return;
     }
@@ -62,9 +62,9 @@ const PostItem = ({ post, updatePost, showActions, onAction }) => {
     onAction(action, post._id);
   };
 
-  // Check if the currentUser has liked or disliked the post
-  const hasLiked = currentUser && post.likes.includes(currentUser._id); // Assuming currentUser has _id
-  const hasDisliked = currentUser && post.dislikes.includes(currentUser._id);
+  // Check if the user has liked or disliked the post
+  const hasLiked = user && post.likes.includes(user._id); // Assuming user has _id
+  const hasDisliked = user && post.dislikes.includes(user._id);
 
   //console.log(hasLiked, hasDisliked);
 

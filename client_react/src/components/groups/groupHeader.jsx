@@ -12,12 +12,12 @@ import { joinGroup, leaveGroup } from "../../FetchApi";
 
 const GroupHeader = ({ group }) => {
   const navigate = useNavigate();
-  const { currentUser } = useAuth();
+  const { user } = useAuth();
   //states
   const [showLoginPopup, setShowLoginPopup] = useState(false);
 
   const handleJoinGroup = async () => {
-    if (!currentUser) {
+    if (!user) {
       setShowLoginPopup(true);
       return;
     }
@@ -59,10 +59,9 @@ const GroupHeader = ({ group }) => {
 
   /* Check if user is a member of the group */
   const isMember =
-    currentUser &&
-    group.members.some((member) => member.user === currentUser._id);
+    user && group.members.some((member) => member.user === user._id);
   /* Check if user is a admin of the group */
-  const isAdmin = currentUser && group.admin === currentUser._id;
+  const isAdmin = user && group.admin === user._id;
 
   /* console.log("Is Member:", isMember);
   console.log("Is Admin:", isAdmin); */

@@ -6,6 +6,7 @@ const {
   getCurrentUser,
   requestVerification,
   approveVerification,
+  refreshAccessToken,
 } = require("../controllers/authController");
 
 const { isLoggedIn, isLoggedOut, isAdmin } = require("../middlewares/auth");
@@ -15,6 +16,8 @@ const authRouter = express.Router();
 
 authRouter.post("/login", isLoggedOut, userLogin);
 authRouter.get("/logout", isLoggedIn, userLogout);
+authRouter.post("/refresh-token", refreshAccessToken);
+
 authRouter.get("/current-user", isLoggedIn, getCurrentUser);
 
 authRouter.post(

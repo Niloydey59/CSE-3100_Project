@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-
+import React, { useState } from "react";
 import { useAuth } from "../context/authcontext";
 
 // Components
@@ -11,38 +10,25 @@ import UserGroups from "../components/dashboard/userGroups";
 import "../styling/dashboard/dashboard.css";
 
 const Dashboard = () => {
-  const { currentUser, logout } = useAuth();
+  const { user, logout } = useAuth();
   const [activeTab, setActiveTab] = useState("userInfo");
-  const [stats, setStats] = useState({
-    totalPosts: 0,
-    totalGroups: 0,
-    totalLikes: 0,
-  });
 
-  useEffect(() => {
-    // Fetch user stats here
-    const fetchStats = async () => {
-      try {
-        // Replace with actual API calls
-        setStats({
-          totalPosts: 15,
-          totalGroups: 3,
-          totalLikes: 45,
-        });
-      } catch (error) {
-        console.error("Failed to fetch stats:", error);
-      }
-    };
-    fetchStats();
-  }, []);
-
-  if (!currentUser) {
+  if (!user) {
     return (
       <div className="loading">
         <i className="fa-solid fa-spinner fa-spin"></i> Loading user data...
       </div>
     );
   }
+
+  // Format position for display
+  const formatPosition = (position) => {
+    if (!position) return "";
+    return position
+      .split("_")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  };
 
   const renderContent = () => {
     switch (activeTab) {
@@ -67,36 +53,52 @@ const Dashboard = () => {
       <div className="dashboard-content">
         <div className="welcome-section">
           <div className="welcome-avatar">
-            {currentUser.photoURL ? (
-              <img src={currentUser.photoURL} alt={currentUser.username} />
+            {user.photoURL ? (
+              <img src={user.photoURL} alt={user.username} />
             ) : (
-              currentUser.username[0].toUpperCase()
+              user.username[0].toUpperCase()
             )}
           </div>
           <div className="welcome-text">
-            <h1>Welcome back, {currentUser.username}!</h1>
+            <h1>Welcome back, {user.username}!</h1>
             <div className="welcome-subtitle">
               Ready to share your knowledge?
-            </div>
-            <div className="last-login">
-              Last login: {new Date().toLocaleDateString()}
             </div>
           </div>
         </div>
 
         <div className="stats-container">
-          <div className="stat-card">
-            <div className="stat-value">{stats.totalPosts}</div>
-            <div className="stat-label">Total Posts</div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-value">{stats.totalGroups}</div>
-            <div className="stat-label">Groups Joined</div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-value">{stats.totalLikes}</div>
-            <div className="stat-label">Total Likes</div>
-          </div>
+          {user.series && user.series.isApproved && (
+            <div className="stat-card verified-stat">
+              <div className="stat-icon">
+                <i className="fa-solid fa-calendar-alt"></i>
+              </div>
+              <div className="stat-value">{user.series.value}</div>
+              <div className="stat-label">Series</div>
+            </div>
+          )}
+
+          {user.department && user.department.isApproved && (
+            <div className="stat-card verified-stat">
+              <div className="stat-icon">
+                <i className="fa-solid fa-building-columns"></i>
+              </div>
+              <div className="stat-value">{user.department.value}</div>
+              <div className="stat-label">Department</div>
+            </div>
+          )}
+
+          {user.position && user.position.isApproved && (
+            <div className="stat-card verified-stat">
+              <div className="stat-icon">
+                <i className="fa-solid fa-user-tie"></i>
+              </div>
+              <div className="stat-value">
+                {formatPosition(user.position.value)}
+              </div>
+              <div className="stat-label">Position</div>
+            </div>
+          )}
         </div>
 
         {renderContent()}

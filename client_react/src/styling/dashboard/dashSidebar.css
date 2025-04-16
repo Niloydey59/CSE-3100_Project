@@ -60,6 +60,12 @@
   color: #fff;
 }
 
+
+/* Admin Button */
+.admin-button i {
+  color: #FF571A;
+}
+
 @media (max-width: 768px) {
   .Dashsidebar {
     width: 100%;

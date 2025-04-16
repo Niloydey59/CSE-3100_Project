@@ -1,5 +1,6 @@
 const createError = require("http-errors"); // error-handling middleware
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const User = require("../models/userModel");
 
@@ -13,6 +14,9 @@ const userLogin = async (req, res, next) => {
     //email and password from request body
     const { email, password } = req.body;
 
+    console.log("Email: ", email);
+    console.log("Password: ", password);
+
     //check if user exists
     const user = await User.findOne({ email });
     if (!user) {
@@ -25,20 +29,34 @@ const userLogin = async (req, res, next) => {
       throw createError(400, "Invalid credentials! Please try again.");
     }
 
-    //isBanned
+    // Create user object without sensitive data for token
+    const userForToken = {
+      _id: user._id,
+      email: user.email,
+      username: user.username,
+      bio: user.bio,
+      series: user.series,
+      position: user.position,
+      department: user.department,
+      verificationDocument: user.verificationDocument,
+      groups: user.groups,
+      isVerified: user.isVerified,
+      isAdmin: user.isAdmin,
+    };
     //generate token, cookie
     //create jwt
-    const accesstoken = createJSONWebToken({ user }, jwtAccessKey, "15m");
-    const refreshtoken = createJSONWebToken({ user }, jwtRefreshKey, "7d");
+    const accessToken = createJSONWebToken(
+      { user: userForToken },
+      jwtAccessKey,
+      "15m"
+    );
+    const refreshToken = createJSONWebToken(
+      { user: userForToken },
+      jwtRefreshKey,
+      "7d"
+    );
 
-    res.cookie("access_token", accesstoken, {
-      maxAge: 15 * 60 * 1000, // 15 minutes
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-    });
-
-    res.cookie("refresh_token", refreshtoken, {
+    res.cookie("refresh_token", refreshToken, {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       httpOnly: true,
       secure: true,
@@ -49,7 +67,10 @@ const userLogin = async (req, res, next) => {
     return successResponse(res, {
       statusCode: 200,
       message: "Users logged in succesfully!",
-      payload: { user },
+      payload: {
+        user: userForToken,
+        accessToken: accessToken,
+      },
     });
   } catch (error) {
     next(error);
@@ -59,7 +80,6 @@ const userLogin = async (req, res, next) => {
 const userLogout = async (req, res, next) => {
   try {
     //clear cookie
-    res.clearCookie("access_token");
     res.clearCookie("refresh_token");
     //success response
     return successResponse(res, {
@@ -72,10 +92,59 @@ const userLogout = async (req, res, next) => {
   }
 };
 
+const refreshAccessToken = async (req, res, next) => {
+  try {
+    console.log("Refreshing access token...");
+    //console.log("Request Body: ", req.body);
+    // Get refresh token from cookie
+    //console.log("Request Cookies: ", req.cookies);
+    const refreshToken = req.cookies.refresh_token;
+    //console.log("Refresh Token: ", refreshToken);
+
+    if (!refreshToken) {
+      throw createError(401, "Refresh token not found");
+    }
+
+    // Verify refresh token
+    try {
+      const decoded = jwt.verify(refreshToken, jwtRefreshKey);
+      const userFromToken = decoded.user;
+
+      // Generate new access token
+      const newAccessToken = createJSONWebToken(
+        { user: userFromToken },
+        jwtAccessKey,
+        "15m"
+      );
+
+      // Return new access token
+      return successResponse(res, {
+        statusCode: 200,
+        message: "New access token generated successfully",
+        payload: {
+          accessToken: newAccessToken,
+        },
+      });
+    } catch (error) {
+      console.error("Error verifying refresh token:", error);
+      throw createError(401, "Invalid or expired refresh token");
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getCurrentUser = async (req, res, next) => {
   try {
     //get user from request
-    const user = req.user;
+    const userid = req.user._id;
+    //find user by id
+    const user = await User.findById(userid);
+
+    if (!user) {
+      throw createError(404, "User not found");
+    }
+
     //remove password from user
     user.password = undefined;
 
@@ -91,7 +160,13 @@ const getCurrentUser = async (req, res, next) => {
 
 const requestVerification = async (req, res, next) => {
   try {
-    const images = req.files;
+    console.log(req.files);
+    // Check if files exist
+    const images = req.files || [];
+
+    if (images.length === 0) {
+      throw createError(400, "At least one verification document is required");
+    }
 
     const { series, position, department } = req.body;
     if (!series && !position && !department) {
@@ -178,8 +253,12 @@ const requestVerification = async (req, res, next) => {
 const approveVerification = async (req, res, next) => {
   try {
     const { userId, field, status } = req.body;
-    if (!userId || !field) {
-      throw createError(400, "User ID and field are required");
+    if (!userId || !field || !status) {
+      throw createError(400, "User ID and field and status are required");
+    }
+
+    if (!["approve", "reject"].includes(status)) {
+      throw createError(400, "Status must be either 'approve' or 'reject'");
     }
 
     const user = await User.findById(userId);
@@ -214,6 +293,7 @@ const approveVerification = async (req, res, next) => {
 module.exports = {
   userLogin,
   userLogout,
+  refreshAccessToken,
   getCurrentUser,
   requestVerification,
   approveVerification,

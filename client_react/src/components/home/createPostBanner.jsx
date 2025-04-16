@@ -8,11 +8,11 @@ import "../../styling/home/createPostBanner.css";
 
 const CreatePostBanner = () => {
   const navigate = useNavigate();
-  const { currentUser } = useAuth();
+  const { user } = useAuth();
   const [inputText, setInputText] = useState("");
 
   const handleCreatePost = () => {
-    if (!currentUser) {
+    if (!user) {
       // Handle not logged in state
       return;
     }
@@ -28,11 +28,11 @@ const CreatePostBanner = () => {
       <div className="banner-content">
         <div className="profile-section">
           <div className="profile-icon">
-            {currentUser?.photoURL ? (
-              <img src={currentUser.photoURL} alt="profile" />
+            {user?.photoURL ? (
+              <img src={user.photoURL} alt="profile" />
             ) : (
               <div className="default-avatar">
-                {currentUser?.displayName?.[0] || "?"}
+                {user?.displayName?.[0] || "?"}
               </div>
             )}
           </div>

@@ -1,48 +1,46 @@
 const createError = require("http-errors"); // error-handling middleware
 const jwt = require("jsonwebtoken");
-const { jwtAccessKey, jwtRefreshKey } = require("../secret");
-const { createJSONWebToken } = require("../helper/jsonwebtoken");
-const { refreshTokenHandler } = require("../services/finditem");
+const { jwtAccessKey } = require("../secret");
 
 const isLoggedIn = async (req, res, next) => {
   try {
-    console.log("In isLoggedIn Middleware");
-    //console.log("Cookies: ", req.cookies);
-    const accessToken = req.cookies.access_token;
-    const refreshToken = req.cookies.refresh_token;
-    if (!accessToken && !refreshToken) {
-      throw createError(401, "Acess Denied! Please login.");
-    }
-    if (!accessToken || req.cookies.access_token === "null") {
-      console.log("Calling refreshTokenHandler");
+    // Get token from Authorization header
+    const authHeader = req.headers.authorization;
+    //console.log("Auth Header: ", authHeader);
 
-      const newAccessToken = await refreshTokenHandler(refreshToken);
-      //console.log("New Access Token: ", newAccessToken);
-      res.cookie("access_token", newAccessToken, {
-        maxAge: 15 * 60 * 1000, // 15 minutes
-        httpOnly: true,
-        secure: true,
-        sameSite: "none",
-      });
-      const decoded = jwt.verify(newAccessToken, jwtAccessKey);
-      req.user = decoded.user;
-      next();
-    } else {
-      const decoded = jwt.verify(accessToken, jwtAccessKey);
-      //console.log("Decoded: ", decoded);
-      req.user = decoded.user;
-      return next();
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      throw createError(401, "No access token provided");
     }
+
+    // Extract token from header
+    const accessToken = authHeader.split(" ")[1];
+
+    if (!accessToken) {
+      throw createError(401, "Invalid access token format");
+    }
+
+    console.log("User is logged in and found token");
+    //console.log("Access Token: ", accessToken);
+    // Verify the access token
+    const decoded = jwt.verify(accessToken, jwtAccessKey);
+
+    // Set user in request
+    req.user = decoded.user;
+    console.log("Access token verified and user set in request");
+    //console.log("User Data: ", req.user);
+
+    // Proceed to the next middleware
+    next();
   } catch (error) {
     next(error);
   }
 };
 
 const isLoggedOut = (req, res, next) => {
-  const accessToken = req.cookies.access_token;
   const refreshToken = req.cookies.refresh_token;
 
-  if (!accessToken && !refreshToken) {
+  if (!refreshToken) {
+    console.log("User not logged in");
     return next(); // No token, proceed to the next middleware
   }
 

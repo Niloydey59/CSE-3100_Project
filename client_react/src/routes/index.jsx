@@ -14,12 +14,16 @@ import UpdatePost from "./../pages/forms/UpdatePost";
 import CreateGroup from "./../pages/forms/CreateGroup";
 import AddPostPage from "./../pages/forms/AddPost";
 import ManageGroupPage from "./../pages/groups/ManageGroup";
+import Admin from "../pages/Admin";
 
 const AppRoutes = () => {
   return (
     <Routes>
       {/* Login & Register */}
       <Route path="/login" element={<Login />} />
+
+      {/* Add Admin route */}
+      <Route path="/admin" element={<Admin />} />
 
       {/* Home  */}
       <Route path="/" element={<Home />} />

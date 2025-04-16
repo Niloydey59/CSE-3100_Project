@@ -9,7 +9,7 @@ import { createPost } from "../../FetchApi";
 import "../../styling/forms/createPost.css";
 
 const AddPostPage = () => {
-  const { currentUser } = useAuth();
+  const { user } = useAuth();
 
   const navigate = useNavigate();
 

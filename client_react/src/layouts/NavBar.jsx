@@ -7,7 +7,7 @@ import { useSidebar } from "../context/sidebarContext";
 const Navbar = () => {
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const { currentUser } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   const { toggleSidebar } = useSidebar();
@@ -18,7 +18,7 @@ const Navbar = () => {
 
   const handleProfileClick = () => {
     console.log("Profile clicked");
-    if (currentUser) {
+    if (user) {
       console.log("Navigating to dashboard");
       setTimeout(() => navigate("/dashboard"), 0);
     } else {
@@ -71,7 +71,7 @@ const Navbar = () => {
         </form>
 
         <section id="right-section">
-          {currentUser && (
+          {user && (
             <>
               <Link to="/notifications" className="icon" title="Notifications">
                 <i className="fa-solid fa-bell"></i>

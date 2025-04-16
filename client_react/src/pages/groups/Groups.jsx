@@ -13,7 +13,7 @@ import "../../styling/groups/groups.css";
 
 const Groups = () => {
   const [groups, setGroups] = useState([]);
-  const { currentUser } = useAuth();
+  const { user } = useAuth();
 
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
@@ -61,7 +61,7 @@ const Groups = () => {
       <div className="groups-header">
         <h1>Groups</h1>
         <p>Join and explore groups that interest you!</p>
-        {currentUser && (
+        {user && (
           <Link to="/create-group" className="create-group-link">
             Create a Group
           </Link>

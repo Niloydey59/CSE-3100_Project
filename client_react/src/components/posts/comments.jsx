@@ -10,7 +10,7 @@ import "../../styling/posts/comments.css";
 import Popup from "../common/popup";
 
 const Comments = ({ postId }) => {
-  const { currentUser } = useAuth();
+  const { user } = useAuth();
   // States
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
@@ -31,7 +31,7 @@ const Comments = ({ postId }) => {
   }, [postId]);
 
   const handleAddComment = async () => {
-    if (!currentUser) {
+    if (!user) {
       setShowLoginPopup(true); // Show login popup if user is not logged in
       return;
     }
@@ -46,9 +46,9 @@ const Comments = ({ postId }) => {
       const newCommentData = {
         ...data.payload,
         author: {
-          _id: currentUser._id,
-          username: currentUser.username,
-          photoURL: currentUser.photoURL || null,
+          _id: user._id,
+          username: user.username,
+          photoURL: user.photoURL || null,
         },
       };
       console.log("Comment added:", data.payload);

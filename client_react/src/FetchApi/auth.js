@@ -46,3 +46,22 @@ export const fetchCurrentUser = async () => {
     throw error; // Propagate the error if any
   }
 };
+
+export const requestVerification = async (userId, verificationData) => {
+  try {
+    const response = await api.post(
+      `/auth/users/verify/${userId}`,
+      verificationData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    console.log("Verification request submitted successfully:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error.message);
+    throw error;
+  }
+};

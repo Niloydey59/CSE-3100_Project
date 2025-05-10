@@ -1,0 +1,323 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light theme with better contrast between components and background */
+    --background: 210 40% 94%; /* Slightly darker blue-tinted background */
+    --foreground: 222 47% 11.2%;
+    --card: 0 0% 100%; /* Pure white for cards */
+    --card-foreground: 222 47% 11.2%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11.2%;
+    
+    /* Navigation specific colors */
+    --navbar-bg: 0 0% 100%;
+    --navbar-border: 214 32% 91%;
+    
+    /* Component backgrounds - more distinct from main background */
+    --component-bg: 0 0% 100%; /* Pure white for components */
+    --component-hover: 25 100% 97%; /* Subtle orange tint on hover */
+    
+    /* Enhanced border for light mode */
+    --border: 214 35% 85%; /* Darker, more visible border */
+    
+    /* Change primary to orange */
+    --primary: 24 95% 53%;
+    --primary-foreground: 60 9.1% 97.8%;
+    
+    --secondary: 25 20% 92%;
+    --secondary-foreground: 24 9.8% 10%;
+    --muted: 25 20% 92%;
+    --muted-foreground: 25 5.3% 44.7%;
+    --accent: 25 20% 92%;
+    --accent-foreground: 24 9.8% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 60 9.1% 97.8%;
+    --input: 20 10% 85%;
+    --ring: 24 95% 53%;
+    --radius: 0.75rem;
+    
+    /* Chart colors with orange tones */
+    --chart-1: 24 95% 53%;
+    --chart-2: 36 95% 53%;
+    --chart-3: 12 95% 53%;
+    --chart-4: 48 95% 53%;
+    --chart-5: 60 95% 53%;
+
+    /* Enhanced shadow variables for better depth */
+    --shadow-light: 0 4px 10px -2px rgba(0, 0, 0, 0.1), 0 2px 6px -3px rgba(0, 0, 0, 0.06);
+    --shadow-light-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.12), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
+    --shadow-dark: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    --shadow-dark-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.25), 0 4px 6px -4px rgba(0, 0, 0, 0.15);
+  }
+ 
+  .dark {
+    /* Dark theme with rich deep tones */
+    --background: 224 71% 4%;
+    --foreground: 30 6% 93%;
+    --card: 222 47% 6.5%;
+    --card-foreground: 30 6% 93%;
+    --popover: 222 47% 6.5%;
+    --popover-foreground: 30 6% 93%;
+    
+    /* Navigation specific dark colors */
+    --navbar-bg: 225 70% 5.5%;
+    --navbar-border: 215 27.9% 16.9%;
+    
+    /* Component backgrounds - distinct from main background */
+    --component-bg: 222 47% 6.5%;
+    --component-hover: 220 40% 9%;
+    
+    /* Orange primary */
+    --primary: 20 90% 50%;
+    --primary-foreground: 60 9.1% 97.8%;
+    
+    --secondary: 217 35% 12%;
+    --secondary-foreground: 30 6% 93%;
+    --muted: 217 35% 12%;
+    --muted-foreground: 217.9 10.6% 64.9%;
+    --accent: 217 35% 12%;
+    --accent-foreground: 30 6% 93%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 85.7% 97.3%;
+    --border: 215 27.9% 16.9%;
+    --input: 215 27.9% 16.9%;
+    --ring: 20 90% 50%;
+    
+    /* Chart colors */
+    --chart-1: 20 90% 50%;
+    --chart-2: 32 90% 50%;
+    --chart-3: 44 90% 50%;
+    --chart-4: 8 90% 50%;
+    --chart-5: 56 90% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* Navbar styling */
+.navbar {
+  background-color: hsl(var(--navbar-bg));
+  border-color: hsl(var(--navbar-border));
+}
+
+/* Component styling - enhanced for better separation */
+.component-card {
+  background-color: hsl(var(--component-bg));
+  border: 2px solid hsl(var(--border)); /* Thicker border */
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-light);
+  transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.component-card:hover {
+  background-color: hsl(var(--component-hover));
+  box-shadow: var(--shadow-light-hover);
+}
+
+/* Post card specific styling */
+.post-card {
+  background-color: hsl(var(--component-bg));
+  border: 2px solid hsl(var(--border)); /* Thicker border */
+  border-radius: var(--radius);
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow-light);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.post-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-light-hover);
+  background-color: hsl(var(--component-hover));
+}
+
+/* Pattern background for light mode - more visible */
+.pattern-bg {
+  background-color: hsl(var(--background));
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%233b82f6' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Pattern background for dark mode */
+.dark .pattern-bg {
+  background-color: hsl(var(--background));
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23f97316' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Animation for banner elements */
+@keyframes gentle-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.animate-float {
+  animation: gentle-float 3s ease-in-out infinite;
+}
+
+/* Elevated component with stronger visual separation - enhanced */
+.elevated-component {
+  background-color: hsl(var(--component-bg));
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-light);
+  border: 2px solid hsl(var(--border)); /* Thicker border */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.elevated-component:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-light-hover);
+}
+
+.dark .elevated-component {
+  box-shadow: var(--shadow-dark);
+}
+
+.dark .elevated-component:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-dark-hover);
+}
+
+/* Overlay background color to enhance contrast in light mode */
+.bg-subtle {
+  background-color: hsl(var(--background));
+  position: relative;
+  z-index: 0;
+}
+
+/* Add an additional texture class for panels in light mode */
+.light-panel {
+  background-color: hsl(var(--component-bg));
+  border: 2px solid hsl(var(--border)); /* Thicker border */
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-light);
+}
+
+/* New class for floating sidebar sections */
+.sidebar-section {
+  background-color: hsl(var(--component-bg));
+  border: 2px solid hsl(var(--border)); /* Thicker border */
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-light);
+  margin-bottom: 1rem;
+  padding: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sidebar-section:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-light-hover);
+}
+
+/* Image carousel specific styles */
+.image-carousel {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius);
+}
+
+.image-carousel .image-navigation {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.image-carousel:hover .image-navigation {
+  opacity: 1;
+}
+
+.image-indicator {
+  background-color: rgba(0, 0, 0, 0.3);
+  transition: background-color 0.2s ease;
+}
+
+.image-indicator.active {
+  background-color: hsl(var(--primary));
+}
+
+/* Touch swipe support for mobile devices */
+@media (hover: none) {
+  .image-carousel .image-navigation {
+    opacity: 1;
+  }
+}
+
+/* Touch swipe support for mobile devices - make sure controls are visible */
+@media (hover: none) {
+  .image-carousel .image-navigation,
+  .group:hover .image-navigation {
+    opacity: 1;
+  }
+  
+  /* Slightly larger touch targets on mobile */
+  .image-carousel .absolute.left-2,
+  .image-carousel .absolute.right-2 {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+}
+
+/* Add swipe animation for better user feedback */
+.swipe-transition {
+  transition: transform 0.3s ease;
+}
+
+/* Image loading transition effects */
+.img-loading {
+  opacity: 0;
+  transition: opacity 0.3s ease-in;
+}
+
+.img-loaded {
+  opacity: 1;
+}
+
+/* Custom scrollbar for sidebar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: transparent; /* Invisible by default */
+  border-radius: 20px;
+  transition: background-color 0.2s ease;
+}
+
+/* Show scrollbar when hovering over the container or actively scrolling */
+.custom-scrollbar:hover::-webkit-scrollbar-thumb,
+.custom-scrollbar:active::-webkit-scrollbar-thumb,
+.custom-scrollbar:focus::-webkit-scrollbar-thumb {
+  background-color: rgba(156, 163, 175, 0.5);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(156, 163, 175, 0.8);
+}
+
+/* For Firefox */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent; /* Invisible by default */
+  transition: scrollbar-color 0.2s ease;
+}
+
+.custom-scrollbar:hover,
+.custom-scrollbar:active,
+.custom-scrollbar:focus {
+  scrollbar-color: rgba(156, 163, 175, 0.5) transparent; /* Visible when hovered/active */
+}

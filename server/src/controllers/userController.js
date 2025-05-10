@@ -155,7 +155,7 @@ const processRegister = async (req, res, next) => {
     return successResponse(res, {
       statusCode: 200,
       message: `Please check your ${email} for activation link!`,
-      payload: { token },
+      payload: {},
     });
   } catch (error) {
     next(error);

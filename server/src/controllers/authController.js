@@ -70,6 +70,7 @@ const userLogin = async (req, res, next) => {
       payload: {
         user: userForToken,
         accessToken: accessToken,
+        userId: user._id,
       },
     });
   } catch (error) {

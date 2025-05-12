@@ -99,7 +99,7 @@ export default function RegisterPage() {
         description: "Please check your email for an activation link.",
       });
     } catch (error) {
-      // Error will be handled by the store
+      // Error already handled by the store
     }
   };
 

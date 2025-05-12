@@ -6,7 +6,7 @@ import PostList from "@/components/home/PostList";
 import Pagination from "@/components/common/Pagination";
 import Sidebar from "@/components/home/Sidebar";
 import CreatePostBanner from "@/components/home/CreatePostBanner";
-import { postService } from "@/src/services/features/postService";
+import { getPosts } from "@/src/services/features/postService";
 import { Post, PaginationData } from "@/src/types/post.types";
 import Loading from "@/components/Loading/Loading";
 import ErrorPage from "@/components/Error/Error";
@@ -26,7 +26,7 @@ export default function Home() {
     try {
       setIsLoading(true);
       setError(null);
-      const response = await postService.getPosts({ page });
+      const response = await getPosts({ page });
       setPosts(response.payload.posts);
       setPagination(response.payload.pagination);
     } catch (err) {

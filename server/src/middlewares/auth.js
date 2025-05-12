@@ -1,65 +1,57 @@
 const createError = require("http-errors"); // error-handling middleware
 const jwt = require("jsonwebtoken");
 const { jwtAccessKey, jwtRefreshKey } = require("../secret");
+const { createJSONWebToken } = require("../helper/jsonwebtoken");
+const User = require("../models/userModel"); // Add User model import
 
 const isLoggedIn = async (req, res, next) => {
   try {
-    // Get token from Authorization header
-    const authHeader = req.headers.authorization;
-    //console.log("Auth Header: ", authHeader);
-
     // Get refresh token from cookies
     const refreshToken = req.cookies.refresh_token;
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      // No access token, check if refresh token exists
-      if (!refreshToken) {
-        throw createError(
-          401,
-          "No access token provided and no refresh token found"
-        );
-      }
+    // Try to get access token from Authorization header
+    const authHeader = req.headers.authorization;
+    let accessToken = null;
 
-      // Try to refresh using the refresh token
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+      accessToken = authHeader.split(" ")[1];
+    }
+
+    // If no tokens at all, user is not authenticated
+    if (!accessToken && !refreshToken) {
+      throw createError(401, "Authentication required");
+    }
+
+    // If we have an access token, try to use it
+    if (accessToken) {
+      try {
+        const decoded = jwt.verify(accessToken, jwtAccessKey);
+        // Fetch user data from database
+        const user = await User.findById(decoded.userId);
+        if (!user) {
+          throw createError(401, "User not found");
+        }
+        req.user = user;
+        console.log("Access token verified");
+        return next();
+      } catch (error) {
+        // If token expired but we have refresh token, don't fail yet
+        if (error.name !== "TokenExpiredError" || !refreshToken) {
+          throw createError(401, "Invalid access token");
+        }
+        // Continue to refresh token logic if expired
+      }
+    }
+
+    // At this point either:
+    // 1. No access token but we have refresh token
+    // 2. Access token was expired but we have refresh token
+    if (refreshToken) {
       return handleTokenRefresh(refreshToken, req, res, next);
     }
 
-    // Extract token from header
-    const accessToken = authHeader.split(" ")[1];
-
-    if (!accessToken) {
-      // No access token, check if refresh token exists
-      if (!refreshToken) {
-        throw createError(
-          401,
-          "Invalid access token format and no refresh token found"
-        );
-      }
-
-      // Try to refresh using the refresh token
-      return handleTokenRefresh(refreshToken, req, res, next);
-    }
-
-    try {
-      // Try to verify the access token
-      const decoded = jwt.verify(accessToken, jwtAccessKey);
-
-      // Set user in request
-      req.user = decoded.user;
-      console.log("Access token verified and user set in request");
-      //console.log("User Data: ", req.user);
-
-      // Proceed to the next middleware
-      next();
-    } catch (error) {
-      // If token expired and refresh token exists, try to refresh
-      if (error.name === "TokenExpiredError" && refreshToken) {
-        return handleTokenRefresh(refreshToken, req, res, next);
-      }
-
-      // For other JWT errors, throw appropriate error
-      throw createError(401, "Invalid or expired access token");
-    }
+    // Should never reach here due to earlier checks
+    throw createError(401, "Authentication failed");
   } catch (error) {
     next(error);
   }
@@ -88,22 +80,29 @@ const isAdmin = (req, res, next) => {
   }
 };
 
-const handleTokenRefresh = (refreshToken, req, res, next) => {
+const handleTokenRefresh = async (refreshToken, req, res, next) => {
   try {
     // Verify refresh token
     const decoded = jwt.verify(refreshToken, jwtRefreshKey);
 
+    // Fetch the user from the database
+    const user = await User.findById(decoded.userId);
+    if (!user) {
+      throw createError(401, "User not found");
+    }
+
     // Generate a new access token
-    const userData = decoded.user;
-    const accessToken = jwt.sign({ user: userData }, jwtAccessKey, {
-      expiresIn: "15m", // Set appropriate expiration time
-    });
+    const accessToken = createJSONWebToken(
+      { userId: user._id },
+      jwtAccessKey,
+      "15m"
+    );
 
     // Set the new token in response header
     res.set("x-access-token", accessToken);
 
     // Set user in request
-    req.user = userData;
+    req.user = user;
     console.log("Access token refreshed using refresh token");
 
     // Proceed to the next middleware

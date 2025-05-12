@@ -29,8 +29,27 @@ const userLogin = async (req, res, next) => {
       throw createError(400, "Invalid credentials! Please try again.");
     }
 
-    // Create user object without sensitive data for token
-    const userForToken = {
+    // Simplify token payload to only include user ID
+    const accessToken = createJSONWebToken(
+      { userId: user._id },
+      jwtAccessKey,
+      "15m"
+    );
+    const refreshToken = createJSONWebToken(
+      { userId: user._id },
+      jwtRefreshKey,
+      "7d"
+    );
+
+    res.cookie("refresh_token", refreshToken, {
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    });
+
+    // Create user object without sensitive data for response
+    const userForResponse = {
       _id: user._id,
       email: user.email,
       username: user.username,
@@ -43,32 +62,13 @@ const userLogin = async (req, res, next) => {
       isVerified: user.isVerified,
       isAdmin: user.isAdmin,
     };
-    //generate token, cookie
-    //create jwt
-    const accessToken = createJSONWebToken(
-      { user: userForToken },
-      jwtAccessKey,
-      "15m"
-    );
-    const refreshToken = createJSONWebToken(
-      { user: userForToken },
-      jwtRefreshKey,
-      "7d"
-    );
-
-    res.cookie("refresh_token", refreshToken, {
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-    });
 
     //success response
     return successResponse(res, {
       statusCode: 200,
       message: "Users logged in succesfully!",
       payload: {
-        user: userForToken,
+        user: userForResponse,
         accessToken: accessToken,
         userId: user._id,
       },
@@ -96,11 +96,8 @@ const userLogout = async (req, res, next) => {
 const refreshAccessToken = async (req, res, next) => {
   try {
     console.log("Refreshing access token...");
-    //console.log("Request Body: ", req.body);
     // Get refresh token from cookie
-    //console.log("Request Cookies: ", req.cookies);
     const refreshToken = req.cookies.refresh_token;
-    //console.log("Refresh Token: ", refreshToken);
 
     if (!refreshToken) {
       throw createError(401, "Refresh token not found");
@@ -109,11 +106,17 @@ const refreshAccessToken = async (req, res, next) => {
     // Verify refresh token
     try {
       const decoded = jwt.verify(refreshToken, jwtRefreshKey);
-      const userFromToken = decoded.user;
+      const userId = decoded.userId;
+
+      // Check if user exists
+      const user = await User.findById(userId);
+      if (!user) {
+        throw createError(401, "User not found");
+      }
 
       // Generate new access token
       const newAccessToken = createJSONWebToken(
-        { user: userFromToken },
+        { userId: userId },
         jwtAccessKey,
         "15m"
       );
@@ -137,22 +140,17 @@ const refreshAccessToken = async (req, res, next) => {
 
 const getCurrentUser = async (req, res, next) => {
   try {
-    //get user from request
-    const userid = req.user._id;
-    //find user by id
-    const user = await User.findById(userid);
+    // User is already fetched in the isLoggedIn middleware
+    const user = req.user;
 
-    if (!user) {
-      throw createError(404, "User not found");
-    }
-
-    //remove password from user
-    user.password = undefined;
+    // Create a copy without the password
+    const userResponse = user.toObject();
+    delete userResponse.password;
 
     return successResponse(res, {
       statusCode: 200,
       message: "Current user fetched successfully!",
-      payload: { user },
+      payload: { user: userResponse },
     });
   } catch (error) {
     next(error);
@@ -161,20 +159,9 @@ const getCurrentUser = async (req, res, next) => {
 
 const requestVerification = async (req, res, next) => {
   try {
-    console.log(req.files);
-    // Check if files exist
-    const images = req.files || [];
-
-    if (images.length === 0) {
-      throw createError(400, "At least one verification document is required");
-    }
-
     const { series, position, department } = req.body;
     if (!series && !position && !department) {
-      throw createError(
-        400,
-        "At least one field is required  for verification"
-      );
+      throw createError(400, "At least one field is required for verification");
     }
 
     const userId = req.user._id;
@@ -187,11 +174,16 @@ const requestVerification = async (req, res, next) => {
     const fieldsToVerify = [];
 
     if (series) {
-      const seriesYear = parseInt(series);
-      if (isNaN(seriesYear)) {
+      console.log("Series: ", series);
+      const fullYear = parseInt(series);
+      if (isNaN(fullYear)) {
         throw createError(400, "Invalid series year");
       }
-      user.series.value = seriesYear;
+
+      // Extract the last 2 digits from the year
+      const seriesValue = fullYear % 100;
+
+      user.series.value = seriesValue;
       user.series.pendingApproval = true;
       user.series.isApproved = false;
       fieldsToVerify.push("series");
@@ -223,6 +215,36 @@ const requestVerification = async (req, res, next) => {
       fieldsToVerify.push("department");
     }
 
+    await user.save();
+
+    return successResponse(res, {
+      statusCode: 200,
+      message: "Verification request submitted successfully",
+      payload: {
+        pendingVerifications: fieldsToVerify,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const uploadVerificationDocuments = async (req, res, next) => {
+  try {
+    // Check if files exist
+    const images = req.files || [];
+
+    if (images.length === 0) {
+      throw createError(400, "At least one verification document is required");
+    }
+
+    const userId = req.user._id;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      throw createError(404, "User not found");
+    }
+
     const imageUrls = [];
     // Upload verification document
     for (const image of images) {
@@ -231,19 +253,21 @@ const requestVerification = async (req, res, next) => {
       });
       imageUrls.push(response.secure_url);
     }
-    // save img urls with the previos data
+
+    // Save img urls with the previous data
     user.verificationDocument = user.verificationDocument.concat(imageUrls);
 
-    if (user.verificationDocument.length == 0) {
-      throw createError(400, "At least one verification document is required");
+    if (user.verificationDocument.length === 0) {
+      throw createError(400, "Failed to upload verification documents");
     }
+
     await user.save();
 
     return successResponse(res, {
       statusCode: 200,
-      message: "Verification request submitted successfully",
+      message: "Verification documents uploaded successfully",
       payload: {
-        pendingVerifications: fieldsToVerify,
+        documents: imageUrls,
       },
     });
   } catch (error) {
@@ -297,5 +321,6 @@ module.exports = {
   refreshAccessToken,
   getCurrentUser,
   requestVerification,
+  uploadVerificationDocuments,
   approveVerification,
 };

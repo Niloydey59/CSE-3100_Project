@@ -78,7 +78,7 @@ export default function LoginPage() {
       });
       router.push("/");
     } catch (error) {
-      // Error will be handled by the store
+      // Error already handled by the store
     }
   };
 

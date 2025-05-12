@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { userService } from "@/src/services/features/userService";
+import { getCurrentUser } from "@/src/services/features/authService";
 import { User } from "@/src/types/user.types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -22,53 +22,44 @@ import RecentUserPosts from "@/components/user/overview/RecentUserPosts";
 import { formatDate } from "@/src/utils/dateUtils";
 import Loading from "@/components/Loading/Loading";
 import Link from "next/link";
+import { useUser } from "@/components/layout/UserContext";
 
 export default function UserDashboard() {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { user, loading } = useUser();
+
   const [profileCompleteness, setProfileCompleteness] = useState(0);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        // For now use a mock user ID - in a real app, this would come from auth context
-        const userId = "68007b0f485e0a2e69295c2b"; // This should be replaced with actual authenticated user ID
-        const response = await userService.getUserById(userId);
-        setUser(response.payload.user);
+    if (user) {
+      // Calculate profile completeness
+      calculateProfileCompleteness(user);
+    }
+  }, [user]);
 
-        // Calculate profile completeness
-        calculateProfileCompleteness(response.payload.user);
-      } catch (error) {
-        console.error("Failed to fetch user data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const calculateProfileCompleteness = (user: User) => {
+    // Logic to calculate profile completeness - only count verified fields
+    const fields = [
+      !!user.username,
+      !!user.email,
+      !!user.bio,
+      !!(user.series && user.series.value && user.series.isApproved),
+      !!(
+        user.department &&
+        user.department.value &&
+        user.department.isApproved
+      ),
+      !!(user.position && user.position.value && user.position.isApproved),
+      !!user.isVerified,
+    ];
 
-    const calculateProfileCompleteness = (user: User) => {
-      // Logic to calculate profile completeness
-      const fields = [
-        !!user.username,
-        !!user.email,
-        !!user.bio,
-        !!(user.series && user.series.value),
-        !!(user.department && user.department.value),
-        !!(user.position && user.position.value),
-        !!user.isVerified,
-      ];
+    const completedFields = fields.filter(Boolean).length;
+    const completenessPercentage = Math.round(
+      (completedFields / fields.length) * 100
+    );
+    setProfileCompleteness(completenessPercentage);
+  };
 
-      const completedFields = fields.filter(Boolean).length;
-      const completenessPercentage = Math.round(
-        (completedFields / fields.length) * 100
-      );
-      setProfileCompleteness(completenessPercentage);
-    };
-
-    fetchUserData();
-  }, []);
-
-  if (loading) return <Loading />;
-  if (!user) return null;
+  if (loading || !user) return <Loading />;
 
   return (
     <div className="space-y-6">
@@ -79,20 +70,7 @@ export default function UserDashboard() {
             Welcome back, {user.username}!
           </p>
         </div>
-        <div className="flex flex-wrap gap-2">
-          <Link href="/user/settings">
-            <Button variant="outline" size="sm">
-              <Pencil className="mr-2 h-4 w-4" />
-              Edit Profile
-            </Button>
-          </Link>
-          <Link href="/user/posts/new">
-            <Button size="sm">
-              <FileText className="mr-2 h-4 w-4" />
-              Create Post
-            </Button>
-          </Link>
-        </div>
+        {/* Removed the buttons container */}
       </div>
 
       {/* Profile Completeness Card */}
@@ -128,7 +106,7 @@ export default function UserDashboard() {
                 </Link>
               )}
 
-              {!user.department?.value && (
+              {(!user.department?.value || !user.department.isApproved) && (
                 <Link href="/user/settings">
                   <Button
                     variant="outline"
@@ -136,12 +114,14 @@ export default function UserDashboard() {
                     className="w-full h-auto py-1 px-2 text-xs"
                   >
                     <Building2 className="mr-1 h-3 w-3" />
-                    Add Department
+                    {user.department?.pendingApproval
+                      ? "Department Pending"
+                      : "Add Department"}
                   </Button>
                 </Link>
               )}
 
-              {!user.series?.value && (
+              {(!user.series?.value || !user.series.isApproved) && (
                 <Link href="/user/settings">
                   <Button
                     variant="outline"
@@ -149,12 +129,14 @@ export default function UserDashboard() {
                     className="w-full h-auto py-1 px-2 text-xs"
                   >
                     <BookOpen className="mr-1 h-3 w-3" />
-                    Add Series
+                    {user.series?.pendingApproval
+                      ? "Series Pending"
+                      : "Add Series"}
                   </Button>
                 </Link>
               )}
 
-              {!user.position?.value && (
+              {(!user.position?.value || !user.position.isApproved) && (
                 <Link href="/user/settings">
                   <Button
                     variant="outline"
@@ -162,7 +144,9 @@ export default function UserDashboard() {
                     className="w-full h-auto py-1 px-2 text-xs"
                   >
                     <GraduationCap className="mr-1 h-3 w-3" />
-                    Add Position
+                    {user.position?.pendingApproval
+                      ? "Position Pending"
+                      : "Add Position"}
                   </Button>
                 </Link>
               )}

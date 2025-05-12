@@ -1,6 +1,13 @@
 import { create } from 'zustand';
-import { User } from '@/src/types/auth.types';
-import { authService } from '@/src/services/features/authService';
+import { User } from '@/src/types/user.types';
+import { 
+  login as apiLogin, 
+  logout as apiLogout, 
+  register as apiRegister, 
+  getCurrentUser as apiGetCurrentUser,
+  isAuthenticated as apiIsAuthenticated
+} from '@/src/services/features/authService';
+import { LoginRequest, RegisterRequest } from '@/src/types/auth.types';
 
 interface AuthState {
   user: User | null;
@@ -19,7 +26,7 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
-  isAuthenticated: authService.isAuthenticated(),
+  isAuthenticated: apiIsAuthenticated(),
   isLoading: false,
   error: null,
   registrationSuccess: false,
@@ -27,7 +34,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   login: async (email: string, password: string) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await authService.login({ email, password });
+      const response = await apiLogin({ email, password });
       set({ 
         user: response.user, 
         isAuthenticated: true, 
@@ -45,7 +52,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   logout: async () => {
     set({ isLoading: true });
     try {
-      await authService.logout();
+      await apiLogout();
       set({ 
         user: null, 
         isAuthenticated: false, 
@@ -63,7 +70,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   register: async (username: string, email: string, password: string) => {
     set({ isLoading: true, error: null });
     try {
-      await authService.register({ username, email, password });
+      await apiRegister({ username, email, password });
       set({ 
         isLoading: false,
         registrationSuccess: true 
@@ -82,7 +89,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     
     set({ isLoading: true });
     try {
-      const user = await authService.getCurrentUser();
+      const user = await apiGetCurrentUser();
       set({ user, isLoading: false });
     } catch (error) {
       set({ 

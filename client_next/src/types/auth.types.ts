@@ -1,3 +1,5 @@
+import { User } from './user.types';
+
 export interface LoginRequest {
   email: string;
   password: string;
@@ -15,31 +17,7 @@ export interface RegisterResponse {
   payload: Record<string, unknown>;
 }
 
-export interface User {
-  _id: string;
-  email: string;
-  username: string;
-  bio?: string;
-  series?: {
-    value: number;
-    pendingApproval: boolean;
-    isApproved: boolean;
-  };
-  position?: {
-    value: string;
-    pendingApproval: boolean;
-    isApproved: boolean;
-  };
-  department?: {
-    value: string;
-    pendingApproval: boolean;
-    isApproved: boolean;
-  };
-  verificationDocument?: string[];
-  groups?: string[];
-  isVerified: boolean;
-  isAdmin: boolean;
-}
+// Removed duplicated User interface - now importing from user.types.ts
 
 export interface LoginResponse {
   user: User;
@@ -51,4 +29,35 @@ export interface ApiResponse<T> {
   statusCode: number;
   message: string;
   payload: T;
+}
+
+export interface RefreshTokenResponse {
+  accessToken: string;
+}
+
+export interface VerificationRequest {
+  series?: number;
+  position?: string;
+  department?: string;
+}
+
+export interface VerificationResponse {
+  pendingVerifications: string[];
+}
+
+export interface UploadDocumentsResponse {
+  documents: string[];
+}
+
+export interface ApproveVerificationRequest {
+  userId: string;
+  field: string;
+  status: 'approve' | 'reject';
+}
+
+export interface Document {
+  id: string;
+  url: string;
+  filename: string;
+  uploadDate: string;
 }

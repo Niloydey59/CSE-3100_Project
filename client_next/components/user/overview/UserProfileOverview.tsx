@@ -68,14 +68,22 @@ const UserProfileOverview: React.FC<UserProfileOverviewProps> = ({ user }) => {
             <li className="flex items-center text-sm">
               <Building2 className="h-4 w-4 mr-2 text-muted-foreground" />
               <span className="text-muted-foreground mr-2">Department:</span>
-              <span className="font-medium">
+              <span
+                className={`font-medium ${
+                  !user.department.isApproved ? "text-muted-foreground" : ""
+                }`}
+              >
                 {user.department.value}
                 {!user.department.isApproved &&
-                  user.department.pendingApproval && (
-                    <Badge variant="outline" className="ml-2 text-xs">
-                      Pending
-                    </Badge>
-                  )}
+                user.department.pendingApproval ? (
+                  <Badge className="ml-2 text-xs bg-amber-500/10 text-amber-600 border-amber-200 hover:bg-amber-500/20">
+                    Pending
+                  </Badge>
+                ) : !user.department.isApproved ? (
+                  <Badge variant="outline" className="ml-2 text-xs">
+                    Not Verified
+                  </Badge>
+                ) : null}
               </span>
             </li>
           )}
@@ -84,13 +92,21 @@ const UserProfileOverview: React.FC<UserProfileOverviewProps> = ({ user }) => {
             <li className="flex items-center text-sm">
               <GraduationCap className="h-4 w-4 mr-2 text-muted-foreground" />
               <span className="text-muted-foreground mr-2">Position:</span>
-              <span className="font-medium capitalize">
+              <span
+                className={`font-medium capitalize ${
+                  !user.position.isApproved ? "text-muted-foreground" : ""
+                }`}
+              >
                 {user.position.value.replace("_", " ")}
-                {!user.position.isApproved && user.position.pendingApproval && (
-                  <Badge variant="outline" className="ml-2 text-xs">
+                {!user.position.isApproved && user.position.pendingApproval ? (
+                  <Badge className="ml-2 text-xs bg-amber-500/10 text-amber-600 border-amber-200 hover:bg-amber-500/20">
                     Pending
                   </Badge>
-                )}
+                ) : !user.position.isApproved ? (
+                  <Badge variant="outline" className="ml-2 text-xs">
+                    Not Verified
+                  </Badge>
+                ) : null}
               </span>
             </li>
           )}
@@ -99,13 +115,21 @@ const UserProfileOverview: React.FC<UserProfileOverviewProps> = ({ user }) => {
             <li className="flex items-center text-sm">
               <BookOpen className="h-4 w-4 mr-2 text-muted-foreground" />
               <span className="text-muted-foreground mr-2">Series:</span>
-              <span className="font-medium">
+              <span
+                className={`font-medium ${
+                  !user.series.isApproved ? "text-muted-foreground" : ""
+                }`}
+              >
                 {user.series.value}
-                {!user.series.isApproved && user.series.pendingApproval && (
-                  <Badge variant="outline" className="ml-2 text-xs">
+                {!user.series.isApproved && user.series.pendingApproval ? (
+                  <Badge className="ml-2 text-xs bg-amber-500/10 text-amber-600 border-amber-200 hover:bg-amber-500/20">
                     Pending
                   </Badge>
-                )}
+                ) : !user.series.isApproved ? (
+                  <Badge variant="outline" className="ml-2 text-xs">
+                    Not Verified
+                  </Badge>
+                ) : null}
               </span>
             </li>
           )}

@@ -11,6 +11,7 @@ import UserPostList from "@/components/user/posts/UserPostList";
 import UserPostFilters from "@/components/user/posts/UserPostFilters";
 import { useToast } from "@/hooks/use-toast";
 import Loading from "@/components/Loading/Loading";
+import { getUserPosts, deletePost } from "@/src/services/features/postService";
 
 // Mock data for posts
 const MOCK_POSTS: Post[] = [
@@ -89,10 +90,13 @@ export default function UserPosts() {
     const fetchPosts = async () => {
       try {
         setLoading(true);
+        // Instead of using mock data, you would use:
+        // const response = await getUserPosts({ page: 1, limit: 10 });
+        // setPosts(response.payload.posts);
+
+        // For demo purposes, continue using mock data
         // Simulate API call delay
         await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        // Filter by user ID (in a real app)
         setPosts(MOCK_POSTS);
         setFilteredPosts(MOCK_POSTS);
       } catch (error) {
@@ -153,16 +157,25 @@ export default function UserPosts() {
     setFilteredPosts(result);
   }, [posts, searchQuery, activeTab, sortOrder]);
 
-  const handleDeletePost = (postId: string) => {
-    // In a real app, you would call an API to delete the post
-    toast({
-      title: "Post deleted",
-      description: "Your post has been successfully deleted.",
-    });
+  const handleDeletePost = async (postId: string) => {
+    // In a real app, you would call the API
+    try {
+      // await deletePost(postId);
+      toast({
+        title: "Post deleted",
+        description: "Your post has been successfully deleted.",
+      });
 
-    // Update local state
-    const updatedPosts = posts.filter((post) => post._id !== postId);
-    setPosts(updatedPosts);
+      // Update local state
+      const updatedPosts = posts.filter((post) => post._id !== postId);
+      setPosts(updatedPosts);
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to delete the post. Please try again.",
+      });
+    }
   };
 
   const toggleSort = () => {

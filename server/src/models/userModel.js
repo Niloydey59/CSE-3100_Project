@@ -46,10 +46,10 @@ const userSchema = new Schema(
     series: {
       value: {
         type: Number,
-        min: [1960, "Series year cannot be before 1960"],
-        max: [new Date().getFullYear(), "Series year cannot be in future"],
+
         default: null,
       },
+
       isApproved: {
         type: Boolean,
         default: false,

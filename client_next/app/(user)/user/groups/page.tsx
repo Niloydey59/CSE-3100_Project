@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { User } from "@/src/types/user.types";
-import { userService } from "@/src/services/features/userService";
+import { getUserById } from "@/src/services/features/userService";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -104,7 +104,7 @@ export default function UserGroups() {
         setLoading(true);
         // For now use a mock user ID
         const userId = "68007b0f485e0a2e69295c2b";
-        const response = await userService.getUserById(userId);
+        const response = await getUserById(userId);
         setUser(response.payload.user);
       } catch (error) {
         console.error("Failed to fetch user data:", error);

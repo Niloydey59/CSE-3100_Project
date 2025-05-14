@@ -18,6 +18,7 @@ interface ImageCarouselProps {
   postId: string;
   aspectRatio?: "square" | "video" | "wide";
   className?: string;
+  fullWidth?: boolean;
 }
 
 const ImageCarousel: React.FC<ImageCarouselProps> = ({
@@ -25,6 +26,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
   postId,
   aspectRatio = "video",
   className,
+  fullWidth = false,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [viewerOpen, setViewerOpen] = useState(false);
@@ -90,7 +92,8 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
         className={cn(
           "relative overflow-hidden rounded-md group",
           aspectRatioClasses[aspectRatio],
-          className
+          className,
+          fullWidth ? "w-full" : "max-w-3xl"
         )}
       >
         <div className="absolute inset-0">
@@ -108,7 +111,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                 src={src}
                 alt={`Post image ${index + 1}`}
                 fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                sizes={fullWidth ? "100vw" : "(max-width: 768px) 100vw, 50vw"}
                 className="object-cover"
                 priority={index === currentIndex}
                 // Fallback for image loading errors

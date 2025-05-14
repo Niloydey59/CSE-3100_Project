@@ -102,11 +102,12 @@ const PostCard: React.FC<PostCardProps> = ({
 
           {/* Image Carousel - Only render if post has images */}
           {hasImages && (
-            <div className="mb-4">
+            <div className="mb-4 -mx-4">
               <ImageCarousel
                 images={post.image}
                 postId={post._id}
                 aspectRatio="video"
+                fullWidth={true}
               />
             </div>
           )}
@@ -235,11 +236,12 @@ const PostCard: React.FC<PostCardProps> = ({
 
           {/* Image Carousel - Only render if post has images */}
           {hasImages && (
-            <div className="mb-4" onClick={stopPropagation}>
+            <div className="mb-4 -mx-4" onClick={stopPropagation}>
               <ImageCarousel
                 images={post.image}
                 postId={post._id}
                 aspectRatio="video"
+                fullWidth={true}
               />
             </div>
           )}

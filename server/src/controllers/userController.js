@@ -168,17 +168,22 @@ const sendActivationEmail = async (req, res, next) => {
     //console.log("User Data: ", user);
     const email = user.email;
 
+    const tokenPayload = {
+      userId: user._id.toString(),
+      email: user.email,
+    };
+
     //create jwt
-    const token = createJSONWebToken(user, jwtActivationKey, "10m");
+    const token = createJSONWebToken(tokenPayload, jwtActivationKey, "10m");
 
     //prepare email
     const emailData = {
       email,
       subject: "Account Activation Link",
       html: `
-        <h2>Hello ${user.name} ! </h2>
+        <h2>Hello ${user.username} ! </h2>
         <h1>Please use the following link to activate your account</h1>
-        <a href="${clientURL}/api/users/verify/${token}" target="_blank">
+        <a href="${clientURL}/verify/${token}" target="_blank">
         <hr />
         <p>Activate</p>
       `,
@@ -187,6 +192,7 @@ const sendActivationEmail = async (req, res, next) => {
     //send email with nodemailer
     try {
       await sendEmailWithNodeMailer(emailData);
+      console.log("Email sent successfully!");
     } catch (emailError) {
       next(createError(500, "Email could not be sent!"));
       return;
@@ -198,6 +204,7 @@ const sendActivationEmail = async (req, res, next) => {
       payload: { token },
     });
   } catch (error) {
+    console.log("Error: ", error);
     next(error);
   }
 };
@@ -223,7 +230,7 @@ const activateUserAccount = async (req, res, next) => {
         throw createError(401, "Unable to verfy user! Please try again.");
       }
 
-      const user = await User.findOne({ email: decoded.email });
+      const user = await User.findById(decoded.userId);
       if (!user) {
         throw createError(404, "User not found! Please register.");
       }

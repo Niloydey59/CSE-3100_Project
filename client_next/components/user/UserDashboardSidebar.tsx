@@ -8,7 +8,6 @@ import {
   User as UserIcon,
   FileText,
   Settings,
-  Lock,
   ShieldCheck,
   Users,
   ChevronRight,
@@ -49,14 +48,23 @@ const UserDashboardSidebar: React.FC<UserDashboardSidebarProps> = ({
       icon: <FileText className="h-4 w-4" />,
     },
     {
+      name: "My Groups",
+      href: "/user/groups",
+      icon: <Users className="h-4 w-4" />,
+      badge:
+        user.groups && user.groups.length > 0 ? (
+          <Badge
+            variant="outline"
+            className="ml-auto rounded-full px-2.5 bg-primary/10 text-primary text-xs"
+          >
+            {user.groups.length}
+          </Badge>
+        ) : null,
+    },
+    {
       name: "Account Settings",
       href: "/user/settings",
       icon: <Settings className="h-4 w-4" />,
-    },
-    {
-      name: "Security",
-      href: "/user/security",
-      icon: <Lock className="h-4 w-4" />,
     },
     {
       name: "Verification",
@@ -77,20 +85,6 @@ const UserDashboardSidebar: React.FC<UserDashboardSidebarProps> = ({
           Pending
         </Badge>
       ),
-    },
-    {
-      name: "My Groups",
-      href: "/user/groups",
-      icon: <Users className="h-4 w-4" />,
-      badge:
-        user.groups && user.groups.length > 0 ? (
-          <Badge
-            variant="outline"
-            className="ml-auto rounded-full px-2.5 bg-primary/10 text-primary text-xs"
-          >
-            {user.groups.length}
-          </Badge>
-        ) : null,
     },
   ];
 

@@ -11,8 +11,8 @@ import { useUser } from "@/components/layout/UserContext";
 import {
   requestVerification,
   uploadVerificationDocuments,
-  sendVerificationEmail,
 } from "@/src/services/features/authService";
+import { sendVerificationEmail } from "@/src/services/features/userService";
 
 const VerificationPage = () => {
   const { user, loading } = useUser();

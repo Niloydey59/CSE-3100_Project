@@ -197,28 +197,3 @@ export const isAuthenticated = (): boolean => {
   }
 };
 
-/**
- * Send verification email
- * @returns void
- */
-export const sendVerificationEmail = async (): Promise<void> => {
-  try {
-    // Call your API endpoint to send verification email
-    const response = await fetch('/api/users/send-verification-email', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Failed to send verification email');
-    }
-
-    return;
-  } catch (error) {
-    throw error;
-  }
-};

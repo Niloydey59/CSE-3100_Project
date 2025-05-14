@@ -32,6 +32,7 @@ const isLoggedIn = async (req, res, next) => {
           throw createError(401, "User not found");
         }
         req.user = user;
+
         console.log("Access token verified");
         return next();
       } catch (error) {

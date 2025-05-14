@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar/Navbar";
-import PostList from "@/components/home/PostList";
+import PostList from "@/components/posts/PostList";
 import Pagination from "@/components/common/Pagination";
 import Sidebar from "@/components/home/Sidebar";
 import CreatePostBanner from "@/components/home/CreatePostBanner";

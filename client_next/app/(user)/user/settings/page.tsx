@@ -7,7 +7,8 @@ import { getUserById, updateUser } from "@/src/services/features/userService";
 import { useToast } from "@/hooks/use-toast";
 import Loading from "@/components/Loading/Loading";
 import ProfileInformationForm from "@/components/user/settings/ProfileInformationForm";
-import AcademicInformationForm from "@/components/user/settings/AcademicInformationForm";
+import SecuritySettingsForm from "@/components/user/settings/SecuritySettingsForm";
+import UserSettingsAvatar from "@/components/user/settings/UserSettingsAvatar";
 
 const UserSettings = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -19,9 +20,6 @@ const UserSettings = () => {
   const [formData, setFormData] = useState({
     username: "",
     bio: "",
-    series: "",
-    position: "none",
-    department: "none",
   });
 
   useEffect(() => {
@@ -36,9 +34,6 @@ const UserSettings = () => {
         setFormData({
           username: response.payload.user.username || "",
           bio: response.payload.user.bio || "",
-          series: response.payload.user.series?.value?.toString() || "",
-          position: response.payload.user.position?.value || "none",
-          department: response.payload.user.department?.value || "none",
         });
       } catch (error) {
         console.error("Failed to fetch user data:", error);
@@ -62,18 +57,11 @@ const UserSettings = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSelectChange = (name: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
   const resetForm = () => {
     if (user) {
       setFormData({
         username: user.username,
         bio: user.bio || "",
-        series: user.series?.value?.toString() || "",
-        position: user.position?.value || "none",
-        department: user.department?.value || "none",
       });
     }
   };
@@ -88,31 +76,10 @@ const UserSettings = () => {
       const updateData = {
         username: formData.username,
         bio: formData.bio,
-        series:
-          formData.series && formData.series !== "none"
-            ? {
-                value: parseInt(formData.series),
-                pendingApproval: true,
-              }
-            : undefined,
-        position:
-          formData.position && formData.position !== "none"
-            ? {
-                value: formData.position as any,
-                pendingApproval: true,
-              }
-            : undefined,
-        department:
-          formData.department && formData.department !== "none"
-            ? {
-                value: formData.department as any,
-                pendingApproval: true,
-              }
-            : undefined,
       };
 
       try {
-        // Use the actual API call instead of simulation
+        // Use the actual API call
         const response = await updateUser(user._id, updateData);
 
         toast({
@@ -153,14 +120,14 @@ const UserSettings = () => {
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Account Settings</h1>
         <p className="text-muted-foreground mt-1">
-          Manage your account information and profile details
+          Manage your account information and security
         </p>
       </div>
 
       <Tabs defaultValue="profile">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="profile">Profile Information</TabsTrigger>
-          <TabsTrigger value="academic">Academic Details</TabsTrigger>
+          <TabsTrigger value="security">Security</TabsTrigger>
         </TabsList>
 
         <TabsContent value="profile" className="mt-6">
@@ -174,16 +141,8 @@ const UserSettings = () => {
           />
         </TabsContent>
 
-        <TabsContent value="academic" className="mt-6">
-          <AcademicInformationForm
-            user={user}
-            formData={formData}
-            handleChange={handleChange}
-            handleSelectChange={handleSelectChange}
-            handleSubmit={handleSubmit}
-            resetForm={resetForm}
-            saveLoading={saveLoading}
-          />
+        <TabsContent value="security" className="mt-6">
+          <SecuritySettingsForm user={user} />
         </TabsContent>
       </Tabs>
     </div>

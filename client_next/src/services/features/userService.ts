@@ -71,6 +71,8 @@ export const deleteUserById = async (userId: string) => {
  */
 export const sendVerificationEmail = async () => {
   try {
+    // The API endpoint expects payload data, so we need to send an empty object
+    // instead of no payload at all
     const response = await apiClient.post('/users/send-verification-email');
     return response.data;
   } catch (error) {

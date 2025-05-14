@@ -7,71 +7,11 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PlusCircle, Search, Filter, SortAsc, SortDesc } from "lucide-react";
 import Link from "next/link";
-import UserPostList from "@/components/user/posts/UserPostList";
+import PostList from "@/components/posts/PostList";
 import UserPostFilters from "@/components/user/posts/UserPostFilters";
 import { useToast } from "@/hooks/use-toast";
 import Loading from "@/components/Loading/Loading";
 import { getUserPosts, deletePost } from "@/src/services/features/postService";
-
-// Mock data for posts
-const MOCK_POSTS: Post[] = [
-  {
-    _id: "post1",
-    title: "Understanding React Hooks",
-    content:
-      "React Hooks are a feature in React that allow you to use state and other React features without writing a class component. They're a way to reuse stateful logic without changing your component hierarchy.\n\nHooks were added to React in version 16.8, and they enable you to use state and other React features without writing class components. This means you can build your entire application with functional components and hooks.",
-    tags: ["React", "JavaScript", "Web Development"],
-    author: { _id: "mockUserId123", username: "johndoe" },
-    image: [],
-    likes: ["user1", "user2", "user3"],
-    dislikes: [],
-    comments: [{ _id: "comment1" }, { _id: "comment2" }],
-    createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    _id: "post2",
-    title: "Optimizing Database Queries in NodeJS",
-    content:
-      "When working with databases in Node.js applications, optimizing your queries is crucial for performance. Here are some tips for optimization:\n\n1. Use indexing on frequently queried fields\n2. Limit the fields returned in your queries\n3. Use pagination to limit the number of results\n4. Avoid N+1 query problems by using proper joins\n5. Consider using query caching mechanisms",
-    tags: ["NodeJS", "Database", "Performance"],
-    author: { _id: "mockUserId123", username: "johndoe" },
-    image: [],
-    likes: ["user1"],
-    dislikes: ["user4"],
-    comments: [],
-    createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(), // 3 days ago
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    _id: "post3",
-    title: "Introduction to TypeScript: Why You Should Use It",
-    content:
-      "TypeScript is a strongly typed programming language that builds on JavaScript. It provides better tooling at any scale, bringing static typing to JavaScript.\n\nWith TypeScript, you can catch errors during development rather than at runtime, which leads to more robust code and better developer experience. It also provides excellent IDE support with features like autocompletion, type checking, and refactoring tools.",
-    tags: ["TypeScript", "JavaScript", "Programming"],
-    author: { _id: "mockUserId123", username: "johndoe" },
-    image: ["/images/typescript-intro.jpg"],
-    likes: ["user7", "user8", "user9", "user10"],
-    dislikes: ["user11"],
-    comments: [{ _id: "comment5" }, { _id: "comment6" }, { _id: "comment7" }],
-    createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days ago
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    _id: "post4",
-    title: "Building Responsive UIs with Tailwind CSS",
-    content:
-      "Tailwind CSS is a utility-first CSS framework that lets you build any design directly in your markup. It provides low-level utility classes that you can use to build completely custom designs without leaving your HTML.\n\nIn this post, I'll demonstrate how to create fully responsive designs using Tailwind's responsive utility classes. We'll cover breakpoints, responsive variants, and how to structure your components for different screen sizes.",
-    tags: ["CSS", "TailwindCSS", "Web Design", "Responsive Design"],
-    author: { _id: "mockUserId123", username: "johndoe" },
-    image: ["/images/tailwind-responsive.jpg", "/images/tailwind-example.jpg"],
-    likes: ["user12", "user13"],
-    dislikes: [],
-    comments: [{ _id: "comment8" }],
-    createdAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(), // 14 days ago
-    updatedAt: new Date().toISOString(),
-  },
-];
 
 export default function UserPosts() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -86,19 +26,12 @@ export default function UserPosts() {
   const { toast } = useToast();
 
   useEffect(() => {
-    // In a real app, you would fetch posts from an API
     const fetchPosts = async () => {
       try {
         setLoading(true);
-        // Instead of using mock data, you would use:
-        // const response = await getUserPosts({ page: 1, limit: 10 });
-        // setPosts(response.payload.posts);
-
-        // For demo purposes, continue using mock data
-        // Simulate API call delay
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        setPosts(MOCK_POSTS);
-        setFilteredPosts(MOCK_POSTS);
+        const response = await getUserPosts({ page: 1, limit: 10 });
+        setPosts(response.payload.posts);
+        setFilteredPosts(response.payload.posts);
       } catch (error) {
         console.error("Error fetching posts:", error);
         toast({
@@ -158,9 +91,8 @@ export default function UserPosts() {
   }, [posts, searchQuery, activeTab, sortOrder]);
 
   const handleDeletePost = async (postId: string) => {
-    // In a real app, you would call the API
     try {
-      // await deletePost(postId);
+      await deletePost(postId);
       toast({
         title: "Post deleted",
         description: "Your post has been successfully deleted.",
@@ -187,6 +119,19 @@ export default function UserPosts() {
   const toggleFilters = () => {
     setShowFilters(!showFilters);
   };
+
+  // Custom empty state component for user dashboard
+  const emptyStateComponent = (
+    <div className="flex flex-col items-center justify-center py-12 text-center rounded-xl border border-dashed">
+      <h3 className="font-medium text-lg mb-2">No posts found</h3>
+      <p className="text-muted-foreground mb-4">
+        You haven't created any posts yet or none match your current filters.
+      </p>
+      <Link href="/user/posts/new">
+        <Button>Create your first post</Button>
+      </Link>
+    </div>
+  );
 
   if (loading) return <Loading />;
 
@@ -245,26 +190,32 @@ export default function UserPosts() {
         </TabsList>
 
         <TabsContent value="all" className="mt-0">
-          <UserPostList
+          <PostList
             posts={filteredPosts}
+            isUserDashboard={true}
             onDelete={handleDeletePost}
             sortOrder={sortOrder}
+            emptyStateComponent={emptyStateComponent}
           />
         </TabsContent>
 
         <TabsContent value="recent" className="mt-0">
-          <UserPostList
+          <PostList
             posts={filteredPosts}
+            isUserDashboard={true}
             onDelete={handleDeletePost}
             sortOrder={sortOrder}
+            emptyStateComponent={emptyStateComponent}
           />
         </TabsContent>
 
         <TabsContent value="popular" className="mt-0">
-          <UserPostList
+          <PostList
             posts={filteredPosts}
+            isUserDashboard={true}
             onDelete={handleDeletePost}
             sortOrder={sortOrder}
+            emptyStateComponent={emptyStateComponent}
           />
         </TabsContent>
       </Tabs>

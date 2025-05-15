@@ -1,3 +1,4 @@
+"use client";
 import { 
   LoginRequest, 
   LoginResponse, 
@@ -186,8 +187,16 @@ export const approveVerification = async (
 export const isAuthenticated = (): boolean => {
 
   console.log('Checking authentication status...');
+  
+   if (typeof window === 'undefined') {
+    console.log('Running on server, no localStorage available');
+    return false;
+  }
+  console.log('Running on client, checking localStorage');
+  const accessToken = localStorage.getItem('access_token');
   // Check if the access token exists in localStorage
-  if (!localStorage.getItem('access_token')) {
+  if (!accessToken) {
+    // If no access token, user is not authenticated
     console.log('No access token found. User is not authenticated.');
     return false;
   }

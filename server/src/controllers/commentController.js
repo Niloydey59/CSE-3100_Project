@@ -67,17 +67,16 @@ const getComments = async (req, res, next) => {
     //count total comments
     const count = await Comment.find(filter).countDocuments();
 
-    //return error if no comments found
-    if (!comments || comments.length === 0)
-      throw next(createError(404, "No comments found!"));
-
     return successResponse(res, {
       statusCode: 200,
-      message: "Comments were returned succesfully!",
+      message:
+        comments.length > 0
+          ? "Comments were returned successfully!"
+          : "No comments found for this post.",
       payload: {
         comments,
         pagination: {
-          totalpages: Math.ceil(count / limit),
+          totalpages: Math.ceil(count / limit) || 1,
           currentPage: page,
           previousPage: page > 1 ? page - 1 : null,
           nextPage: page + 1 <= Math.ceil(count / limit) ? page + 1 : null,
@@ -168,39 +167,45 @@ const deleteCommentById = async (req, res, next) => {
 
 const likeCommentById = async (req, res, next) => {
   try {
-    //get post id from request params
-    //console.log(req.params);
-    const postid = req.params.id;
+    // Get comment id from request params
+    const commentId = req.params.id;
     const options = {};
-    //console.log(req.user);
+
     const user = await findWithId(User, req.user._id, options);
-    const post = await findWithId(Post, postid, options);
+    const comment = await findWithId(Comment, commentId, options);
 
-    //check if user already liked the post
-    if (post.likes.includes(user._id)) {
-      // remove user id from post likes array
-      post.likes = post.likes.filter((like) => !like.equals(user._id));
+    // Check if user already liked the comment
+    if (comment.likes.includes(user._id)) {
+      // Remove user id from comment likes array
+      comment.likes = comment.likes.filter((like) => !like.equals(user._id));
 
-      // save post
-      const updatedPost = await post.save();
+      // Save comment
+      const updatedComment = await comment.save();
 
       return successResponse(res, {
         statusCode: 200,
         message: "Like was removed successfully!",
-        payload: { updatedPost },
+        payload: { updatedComment },
       });
     }
 
-    //add user id to post likes array
-    post.likes.push(user._id);
+    // Remove from dislikes if user previously disliked
+    if (comment.dislikes.includes(user._id)) {
+      comment.dislikes = comment.dislikes.filter(
+        (dislike) => !dislike.equals(user._id)
+      );
+    }
 
-    //save post
-    const updatedPost = await post.save();
+    // Add user id to comment likes array
+    comment.likes.push(user._id);
+
+    // Save comment
+    const updatedComment = await comment.save();
 
     return successResponse(res, {
       statusCode: 200,
-      message: "Post was liked succesfully!",
-      payload: { updatedPost },
+      message: "Comment was liked successfully!",
+      payload: { updatedComment },
     });
   } catch (error) {
     next(error);
@@ -209,41 +214,45 @@ const likeCommentById = async (req, res, next) => {
 
 const dislikeCommentById = async (req, res, next) => {
   try {
-    //get post id from request params
-    console.log(req.params);
-    const postid = req.params.id;
+    // Get comment id from request params
+    const commentId = req.params.id;
     const options = {};
-    console.log(req.user);
-    const user = await findWithId(User, req.user._id, options);
-    const post = await findWithId(Post, postid, options);
 
-    //check if user already disliked the post
-    if (post.dislikes.includes(user._id)) {
-      // remove user id from post likes array
-      post.dislikes = post.dislikes.filter(
+    const user = await findWithId(User, req.user._id, options);
+    const comment = await findWithId(Comment, commentId, options);
+
+    // Check if user already disliked the comment
+    if (comment.dislikes.includes(user._id)) {
+      // Remove user id from comment dislikes array
+      comment.dislikes = comment.dislikes.filter(
         (dislike) => !dislike.equals(user._id)
       );
 
-      // save post
-      const updatedPost = await post.save();
+      // Save comment
+      const updatedComment = await comment.save();
 
       return successResponse(res, {
         statusCode: 200,
         message: "Dislike was removed successfully!",
-        payload: { updatedPost },
+        payload: { updatedComment },
       });
     }
 
-    //add user id to post likes array
-    post.dislikes.push(user._id);
+    // Remove from likes if user previously liked
+    if (comment.likes.includes(user._id)) {
+      comment.likes = comment.likes.filter((like) => !like.equals(user._id));
+    }
 
-    //save post
-    const updatedPost = await post.save();
+    // Add user id to comment dislikes array
+    comment.dislikes.push(user._id);
+
+    // Save comment
+    const updatedComment = await comment.save();
 
     return successResponse(res, {
       statusCode: 200,
-      message: "Post was disliked succesfully!",
-      payload: { updatedPost },
+      message: "Comment was disliked successfully!",
+      payload: { updatedComment },
     });
   } catch (error) {
     next(error);

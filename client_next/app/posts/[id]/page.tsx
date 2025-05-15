@@ -9,7 +9,7 @@ import Loading from "@/components/Loading/Loading";
 import ErrorPage from "@/components/Error/Error";
 import PostDetailView from "@/components/posts/PostDetailView";
 import RecommendedPosts from "@/components/posts/RecommendedPosts";
-import CommentSection from "@/components/posts/CommentSection";
+import CommentSection from "@/components/comments/CommentSection";
 import { useToast } from "@/hooks/use-toast";
 
 export default function PostPage() {
